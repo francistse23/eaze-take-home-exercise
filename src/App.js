@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 // import './App.css';
 import axios from 'axios';
 import styled from 'styled-components';
-import { maxAppWidth } from './lib/constants';
+import { maxAppWidth, smallScreen, gutter, EazeBlue, EazeGold } from './lib/constants';
+import { SearchBar } from './components/SearchBar';
 
 const AppPageContainer = styled.section`
   display: flex;
@@ -13,14 +14,30 @@ const AppPageContainer = styled.section`
   max-width: ${maxAppWidth}px;
 `
 
-const key = process.env.REACT_APP_API_KEY || 'dc6zaTOxFJmzC';
+const AppHeader = styled.header`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 2px solid ${EazeGold};
+  background-color: ${EazeBlue};
+  max-height: 20%;
+  width: 100%;
+  position: fixed;
+  padding: ${gutter/2}px;
 
+  @media(max-width: ${smallScreen}px){
+    flex-direction: column;
+  }
+`;
+
+const key = process.env.REACT_APP_API_KEY || 'dc6zaTOxFJmzC';
 
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      nsfw: false,
       offset: 0,
       results: [],
       total: 0,
@@ -48,7 +65,18 @@ class App extends Component {
   render() {
     return (
       <AppPageContainer>
-        <code>Hello</code>
+        <AppHeader>
+          <h1 style={{ fontSize: '5rem', color: 'white' }} >eaze</h1>
+          <SearchBar 
+            query={this.state.query}
+            handleChange={this.handleChange}
+            search={this.debouncedSearch}
+            nsfw={this.state.nsfw}
+            type={this.state.type}
+            toggle={this.toggle}
+            paused={this.state.paused}
+          />
+        </AppHeader>
       </AppPageContainer>
     );
   }
