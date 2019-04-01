@@ -60,6 +60,8 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      collection: [],
+      collectionId: [],
       nsfw: false,
       offset: 0,
       paused: false,
@@ -68,6 +70,10 @@ class App extends Component {
       total: 0,
       type: 'gifs',
     }
+  }  
+  // add the selected GIF to collection
+  addToCollection = (id, gif) => {
+    localStorage.setItem(id, JSON.stringify(gif));
   }
   // retrieves all trending GIFs/Stickers from GIPHY
   initialize = () => {
@@ -93,6 +99,15 @@ class App extends Component {
         this.setState({ random, isOpen: !this.state.isOpen });
       });
   };
+  // remove the selected GIF from collection
+  removeFromCollection = id => {
+    localStorage.removeItem(id);
+    let collectId = this.state.collectionId;
+    // splice the ID out of the collectionId state
+    // once it's spliced, it won't be rendered out by this.collection()
+    collectId.splice(collectId.indexOf(id), 1);
+    this.setState({ collectionId: collectId })
+  }
   // enable/disable NSFW content && toggle to show either GIFs or stickers
   toggle = e => {
     if (e.target.name === 'nsfw'){
@@ -140,6 +155,7 @@ class App extends Component {
 
           {/* Content */}
           <Page>
+            
             {/* renders the trending/searched GIFs/Stickers */}
               {results.map( result => (
                 <DraggableGIF 
@@ -152,6 +168,7 @@ class App extends Component {
                 />
               ))}
           </Page>
+
         </ModalProvider>
       </AppPageContainer>
     );
