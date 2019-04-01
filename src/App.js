@@ -3,8 +3,13 @@ import React, { Component } from 'react';
 // import './App.css';
 import axios from 'axios';
 import styled from 'styled-components';
-import { maxAppWidth, smallScreen, gutter, EazeBlue, EazeGold } from './lib/constants';
+import { ModalProvider } from 'styled-react-modal';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+
+import { maxAppWidth, smallScreen, mediumScreen, gutter, EazeBlue, EazeGold } from './lib/constants';
 import { SearchBar } from './components/SearchBar';
+import { DraggableGIF } from './components/DraggableGIF';
 
 const AppPageContainer = styled.section`
   display: flex;
@@ -30,8 +35,26 @@ const AppHeader = styled.header`
   }
 `;
 
+const Page = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: ${gutter}px;
+  background-color: #ccc;
+  color: ${EazeBlue};
+  @media (max-width: ${mediumScreen}px) {
+    padding: ${gutter}px;
+    margin: 0;
+  }
+  @media (max-width: ${smallScreen}px) {
+    padding: ${gutter}px;
+  }
+`;
+
+// sets key to env var if there's one. if not, set the key to GIPHY's public beta key
 const key = process.env.REACT_APP_API_KEY || 'dc6zaTOxFJmzC';
 
+// Controls the offset amount in GIPHY's API
+const offset = 25;
 
 class App extends Component {
   constructor(props){
@@ -39,6 +62,8 @@ class App extends Component {
     this.state = {
       nsfw: false,
       offset: 0,
+      paused: false,
+      query: '',
       results: [],
       total: 0,
       type: 'gifs',
@@ -57,29 +82,80 @@ class App extends Component {
             })
         });
   }
+  // Return random GIF/Sticker, this.state.query acts as tags
+  randomize = () => {
+    let { type, query } = this.state;
+    query = query.split(' ').join('+');
+    let random = [];
+    axios.get(`http://api.giphy.com/v1/${type}/random?api_key=dc6zaTOxFJmzC&tag=${query}&rating=${this.state.nsfw ? 'r' : 'g'}`)
+      .then( res => {
+        random.push(res.data.data);
+        this.setState({ random, isOpen: !this.state.isOpen });
+      });
+  };
+  // enable/disable NSFW content && toggle to show either GIFs or stickers
+  toggle = e => {
+    if (e.target.name === 'nsfw'){
+      this.setState(() => ({ nsfw: !this.state.nsfw }));
+    } else if ( e.target.name === 'type' ){
+      if (this.state.type === 'gifs'){
+        this.setState({ type: 'stickers' }, () => this.search());
+      } else {
+        this.setState({ type: 'gifs' }, () => this.search());
+      }
+    } else if ( e.target.name === 'paused' ){
+      this.setState(() => ({ paused: !this.state.paused }));
+    } else if ( e.target.name === 'confirmModal' ){
+      this.setState({ confirmModal: !this.state.confirmModal });
+    }
+  }
   componentDidMount(){
     // by default, the page will load trending content on start
     this.initialize();
 
   };
   render() {
+    // will only return Rated G GIFs if NSFW is false
+    let results =  this.state.nsfw === true ? 
+                this.state.results : 
+                this.state.results.filter( gif => gif.rating === 'g' ); 
+    // shows how many GIFs were not shown because they are not rated G
+    // let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
     return (
       <AppPageContainer>
-        <AppHeader>
-          <h1 style={{ fontSize: '5rem', color: 'white' }} >eaze</h1>
-          <SearchBar 
-            query={this.state.query}
-            handleChange={this.handleChange}
-            search={this.debouncedSearch}
-            nsfw={this.state.nsfw}
-            type={this.state.type}
-            toggle={this.toggle}
-            paused={this.state.paused}
-          />
-        </AppHeader>
+        <ModalProvider>
+          {/* Navbar */}
+          <AppHeader>
+            <h1 style={{ fontSize: '5rem', color: 'white' }} >eaze</h1>
+            <SearchBar 
+              query={this.state.query}
+              handleChange={this.handleChange}
+              search={this.debouncedSearch}
+              nsfw={this.state.nsfw}
+              type={this.state.type}
+              toggle={this.toggle}
+              paused={this.state.paused}
+            />
+          </AppHeader>
+
+          {/* Content */}
+          <Page>
+            {/* renders the trending/searched GIFs/Stickers */}
+              {results.map( result => (
+                <DraggableGIF 
+                  key={result.id}
+                  {...result}
+                  paused={this.state.paused}
+                  addToCollection={() => this.addToCollection(result.id, {...result})}
+                  removeFromCollection={() => this.removeFromCollection(result.id)}
+                  randomize={this.randomize}
+                />
+              ))}
+          </Page>
+        </ModalProvider>
       </AppPageContainer>
     );
   }
 }
 
-export default App;
+export default DragDropContext(HTML5Backend)(App);

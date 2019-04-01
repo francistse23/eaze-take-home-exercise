@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import './SearchBar.css';
-import { EazeBlue, EazeGold, gutter, smallScreen, mediumScreen } from '../lib/constants';
+import { EazeGold, gutter, smallScreen, mediumScreen } from '../lib/constants';
 import { play, pause } from '../images'
 
 const Button = styled.button`
-    background: ${EazeBlue};
+    background: ${EazeGold};
     background-position: center;
     background-repeat: no-repeat;
     margin-right: 1%;
