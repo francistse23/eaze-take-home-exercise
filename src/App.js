@@ -7,9 +7,10 @@ import { ModalProvider } from 'styled-react-modal';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-import { maxAppWidth, smallScreen, mediumScreen, gutter, EazeBlue, EazeGold } from './lib/constants';
+import { maxAppWidth, smallScreen, mediumScreen, largeScreen, gutter, EazeBlue, EazeGold } from './lib/constants';
 import { SearchBar } from './components/SearchBar';
 import { DraggableGIF } from './components/DraggableGIF';
+import GIFCollection from './components/GIFCollection';
 
 const AppPageContainer = styled.section`
   display: flex;
@@ -19,6 +20,7 @@ const AppPageContainer = styled.section`
   max-width: ${maxAppWidth}px;
 `
 
+// will add transition to hide/show on scroll
 const AppHeader = styled.header`
   display: flex;
   justify-content: space-around;
@@ -35,10 +37,44 @@ const AppHeader = styled.header`
   }
 `;
 
+const Button = styled.button`
+  cursor: pointer;
+  padding: ${gutter/2}px ${gutter}px;
+  font-weight: 650;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 2px solid ${EazeGold};
+  background-color: ${EazeBlue};
+  color: ${EazeGold};
+  &:hover{
+      border: 2px solid ${EazeBlue};
+      background-color: ${EazeGold};
+      color: ${EazeBlue};
+  }
+`;
+
+const GIFs = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 15%;
+  max-width: ${maxAppWidth*1.5}px;
+  @media(max-width: ${largeScreen}px){
+    margin-left: 10%;
+    margin-right: 20%;
+  }
+  @media(max-width: ${mediumScreen}px ){
+    margin-left: 1%;
+    width: 60%;
+  }
+  @media(max-width: ${smallScreen}px ){
+    margin-left: 0;
+  }
+`;
+
 const Page = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${gutter}px;
+  padding: ${gutter*15}px ${gutter}px;
   background-color: #ccc;
   color: ${EazeBlue};
   @media (max-width: ${mediumScreen}px) {
@@ -47,6 +83,20 @@ const Page = styled.div`
   }
   @media (max-width: ${smallScreen}px) {
     padding: ${gutter}px;
+  }
+`;
+
+const PageContent = styled.div`
+  display: flex;
+`;
+
+const PageHeader = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin: ${gutter}px;
+  padding: ${gutter*2}px;
+  @media(max-width: ${smallScreen}px){
+    flex-direction: column;
   }
 `;
 
@@ -74,6 +124,21 @@ class App extends Component {
   // add the selected GIF to collection
   addToCollection = (id, gif) => {
     localStorage.setItem(id, JSON.stringify(gif));
+  }
+  // renders collection saved in localStorage
+  collection = () => {
+    let collect = [];
+    let collectId = [];
+    for ( let i = 0, len = localStorage.length; i < len; i++ ){
+      let key = String(localStorage.key(i))
+      let value = JSON.parse(localStorage[key]);
+      // it'll only add the GIF/sticker into the collection if it isn't in the collection
+      if ( !collectId.includes(value.id) ){
+        collectId.push(key)
+        collect.push(value);
+      }
+    }
+    this.setState(() => ({ collection: collect, collectionId: collectId }));
   }
   // retrieves all trending GIFs/Stickers from GIPHY
   initialize = () => {
@@ -135,7 +200,7 @@ class App extends Component {
                 this.state.results : 
                 this.state.results.filter( gif => gif.rating === 'g' ); 
     // shows how many GIFs were not shown because they are not rated G
-    // let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
+    let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
     return (
       <AppPageContainer>
         <ModalProvider>
@@ -155,18 +220,53 @@ class App extends Component {
 
           {/* Content */}
           <Page>
+
+            {/* Page's header */}
+            <PageHeader>
+              <h2 style={{ fontFamily: 'Megrim' }}>
+                {`${this.state.query === "" ? "Trending" : `"${this.state.query}"` } 
+                ${this.state.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} 
+                ${this.state.type === 'gifs' ? 'GIFs' : 'Stickers'}
+                ${!this.state.nsfw && omitted > 0 ? `, ${omitted.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${this.state.type === 'gifs' ? 'GIFs' : 'Stickers' } omitted on this page` : '' }`}
+              </h2>
+
+              {/* Randomizer */}
+              <Button onClick={this.randomize}>Surprise Me :)</Button>
+
+              {/* Clear Collection */}
+              {this.state.collection.length > 0 ? 
+                <Button name='confirmModal' style={{ background: 'red', color: 'white' }} onClick={this.toggle}>
+                  Clear Collection!
+                </Button> : ''
+              }
+
+            </PageHeader>
             
-            {/* renders the trending/searched GIFs/Stickers */}
-              {results.map( result => (
-                <DraggableGIF 
-                  key={result.id}
-                  {...result}
+            <PageContent>
+
+              <GIFs>
+                {/* renders the trending/searched GIFs/Stickers */}
+                {results.map( result => (
+                  <DraggableGIF 
+                    key={result.id}
+                    {...result}
+                    paused={this.state.paused}
+                    addToCollection={() => this.addToCollection(result.id, {...result})}
+                    removeFromCollection={() => this.removeFromCollection(result.id)}
+                    randomize={this.randomize}
+                    />
+                  ))}
+
+                {/* Area to drop GIFs */}
+                <GIFCollection 
                   paused={this.state.paused}
-                  addToCollection={() => this.addToCollection(result.id, {...result})}
-                  removeFromCollection={() => this.removeFromCollection(result.id)}
-                  randomize={this.randomize}
+                  collection={this.state.collection}
+                  addToCollection={this.addToCollection}
+                  removeFromCollection={this.removeFromCollection}
                 />
-              ))}
+              </GIFs>
+            </PageContent>
+
           </Page>
 
         </ModalProvider>

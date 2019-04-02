@@ -2,7 +2,8 @@
 export const maxAppWidth = 1600;
 export const smallScreen = 768;
 export const mediumScreen = 992;
-export const LargeScreen = 1920;
+export const largeScreen = 1920;
+export const xLargeScreen = 2560;
 
 // spacing
 export const gutter = 16;
