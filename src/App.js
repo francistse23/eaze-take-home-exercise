@@ -130,33 +130,25 @@ class App extends Component {
   //   localStorage.setItem(id, JSON.stringify(gif));
   // }
   addToCollection = (id, gif) => {
-    let { collection, collectionId } = this.state;
-    if ( !collectionId.includes(id) ){
-      let obj = {};
-      obj[id] = gif;
-      collection.push(obj);
-      collectionId.push(id)
-      this.setState(() => ({ collection }));
-    }
+    localStorage.setItem(`${namespace}${id}`, JSON.stringify(gif));
   }
   // renders collection saved in localStorage
-  // collection = () => {
-  //   let collect = [];
-  //   let collectId = [];
-  //   for ( let i = 0, len = localStorage.length; i < len; i++ ){
-  //     let key = String(localStorage.key(i));
-  //     let value = JSON.parse(localStorage[key]);
-  //     // it'll only add the GIF/sticker into the collection if it isn't in the collection
-  //     if ( !collectId.includes(value.id) ){
-  //       collectId.push(key)
-  //       collect.push(value);
-  //     }
-  //   }
-  //   this.setState(() => ({ collection: collect, collectionId: collectId }));
-  // }
-  // collection = () => {
-
-  // }
+  collection = () => {
+    let { collection, collectionId } = this.state;
+    for ( let i = 0, len = localStorage.length; i < len; i++ ){
+      let key = String(localStorage.key(i));
+      if ( !key.includes(namespace) ){
+        break;
+      }
+      let value = JSON.parse(localStorage[key]);
+      // it'll only add the GIF/sticker into the collection if it isn't in the collection
+      if ( !collectionId.includes(value.id) ){
+        collectionId.push(key.replace('Eaze_GIF_', ''))
+        collection.push(value);
+      }
+    }
+    this.setState({ collection, collectionId })
+  }
   // retrieves all trending GIFs/Stickers from GIPHY
   initialize = () => {
     // GIPHY's public beta key, didn't use env since it's public. could set up as env var if needed
@@ -182,20 +174,28 @@ class App extends Component {
       });
   };
   // remove the selected GIF from collection
-  // removeFromCollection = id => {
-  //   localStorage.removeItem(id);
-  //   let collectId = this.state.collectionId;
-  //   // splice the ID out of the collectionId state
-  //   // once it's spliced, it won't be rendered out by this.collection()
-  //   collectId.splice(collectId.indexOf(id), 1);
-  //   this.setState({ collectionId: collectId })
-  // }
   removeFromCollection = id => {
-    let { collection, collectionId } = this.state;
-    let index = collection.map( gif => { return gif.id}).indexOf(id);
-    collection.splice(index, 1);
-    collectionId.splice(index, 1);
-    this.setState(() => ({ collection, collectionId }));
+    localStorage.removeItem(`${namespace}${id}`);
+    let { collectionId } = this.state;
+    // splice the ID out of the collectionId state
+    // once it's spliced, it won't be rendered out by this.collection()
+    collectionId.splice(collectionId.indexOf(id), 1);
+    this.setState({ collectionId })
+  }
+  // search function to parse query and send API call the the search endpoint
+  search = () => {
+    let q = this.state.query.split(' ').join('+');
+    if ( q.length > 1 ){
+      axios.get(`http://api.giphy.com/v1/${this.state.type}/search?api_key=${key}&q=${q}&offset=${this.state.offset}`)
+          .then(res => { 
+              this.setState({ 
+                  results: res.data.data,
+                  total: res.data.pagination.total_count 
+              })
+          });
+    } else {
+      this.initialize();
+    }
   }
   // enable/disable NSFW content && toggle to show either GIFs or stickers
   toggle = e => {
@@ -224,13 +224,12 @@ class App extends Component {
     // by default, the page will load trending content on start
     this.initialize();
     // this will show collection
-    // this.collection();
+    this.collection();
   };
   // componentDidUpdate(prevState){
   // 
   // };
   render() {
-    console.log(this.state.collection)
     // will only return Rated G GIFs if NSFW is false
     let results =  this.state.nsfw === true ? 
                 this.state.results : 
@@ -292,6 +291,7 @@ class App extends Component {
                       alt={this.state.random[0]['title']}
                       username={this.state.random[0]['username']}
                       isOpen={true}
+                      collectionId={this.state.collectionId}
                       addToCollection={() => this.addToCollection(this.state.random[0]['id'], this.state.random[0])}
                       removeFromCollection={() => this.removeFromCollection(this.state.random[0]['id'])}
                       randomize={this.randomize}

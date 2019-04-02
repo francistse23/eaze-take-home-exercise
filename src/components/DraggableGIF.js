@@ -18,6 +18,7 @@ const Result = props => props.connectDragSource(
         title={props.title}
         username={props.username}
         rating={props.rating}
+        collectionId={props.collection}
         addToCollection={props.addToCollection}
         removeFromCollection={props.removeFromCollection}
         randomize={props.randomize}
@@ -30,16 +31,15 @@ export const DraggableGIF = DragSource(
   {
     beginDrag(props, monitor, component) {
       const item = props;
-    //   console.log('Dragging', item);
       return item;
     },
     endDrag(props, monitor, component) {
       // if item is not dropped into target zone
       // check to see if item is in targetzone
       // if it is, remove it from localStorage (collection, collectionID state)
-      if (!monitor.didDrop() && localStorage.getItem(props.id)) {
+      if (!monitor.didDrop() && localStorage.getItem(`Eaze_GIF_${props.id}`)) {
           props.removeFromCollection(props.id)
-        }
+      }
       return;
     }
   },

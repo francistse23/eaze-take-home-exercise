@@ -46,6 +46,8 @@ export const StyledModal = Modal.styled`
     border: 2px solid ${EazeGold};
 `
 
+const namespace = 'Eaze_GIF_';
+
 class GIF extends Component {
     constructor(props){
         super(props);
@@ -57,16 +59,18 @@ class GIF extends Component {
     // renders the collection and store it in state as an array of IDs
     // used to check if user can add/remove the GIF
     collection = () => {
-        let collect = this.state.collection;
+        let { collection } = this.state;
         for ( let i = 0, len = localStorage.length; i < len; i++ ){
-            let key = String(localStorage.key(i))
-            collect.push(key);
+            if ( String(localStorage.key(i).includes(namespace)) ){
+                let key = String(localStorage.key(i)).replace(namespace, '');
+                collection.push(key);
+            }
         }
-        this.setState(() => ({ collection: collect }));
+        this.setState(() => ({ collection }));
     }
     // adds ID to this.state.collection
     addCollectionId = id => {
-        let collection = this.state.collection;
+        let { collection } = this.state;
         collection.push(id);
         this.setState({ collection }, () => {
             this.props.addToCollection();
