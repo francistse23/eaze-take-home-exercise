@@ -54,6 +54,8 @@ const Collection = styled.div`
     color: ${EazeGold};
 `;
 
+const namespace = 'Eaze_GIF_';
+
 const TargetDropzone = DropTarget (
     'result',
     {
@@ -63,10 +65,9 @@ const TargetDropzone = DropTarget (
                 alert('You have already added this gif. Try adding another one!')
                 return;
             } else {
-                // stores item in localStorage, key = GIF's id, value = GIF object from API
-                localStorage.setItem(item.id, JSON.stringify(item));
-                // console.log('Dropped', item);
-                // console.log('GIF added to your collection!')
+                // stores item in localStorage, key = namespace + GIF's id, value = GIF object from API
+                // localStorage.setItem(`${namespace}${item.id}`, JSON.stringify(item));
+                props.addToCollection(item.id, item);
             }
         }
     },
@@ -89,22 +90,23 @@ class GIFCollection extends Component {
                         <h3>Drag & Drop GIFs/Stickers here to store them in your collection :)</h3>
                         <Collection>
                             {collection.length > 0 ? 
-                                collection.map( gif => (
-                                    <DraggableGIF
-                                        {...gif}
-                                        key={gif.id}
-                                        id={gif.id}
-                                        // Not working for collection for some reason, debugging
-                                        url={this.props.paused ? gif.images.fixed_width_still.url : gif.images.fixed_width_downsampled.url}
-                                        HDurl={gif.images.original.url}
-                                        alt={gif.title}
-                                        title={gif.title}
-                                        username={gif.username}
-                                        rating={gif.rating}
-                                        addToCollection={() => this.props.addToCollection(gif.id, gif)}
-                                        removeFromCollection={() => this.props.removeFromCollection(gif.id)}
-                                    /> )) :
-                                'Oh no, your collection is empty :/'
+                                collection.map( gifs => (
+                                    Object.values(gifs).map( gif => 
+                                        <DraggableGIF
+                                            {...gif}
+                                            key={gif.id}
+                                            id={gif.id}
+                                            url={this.props.paused ? gif.images.fixed_width_still.url : gif.images.fixed_width_downsampled.url}
+                                            HDurl={gif.images.original.url}
+                                            alt={gif.title}
+                                            title={gif.title}
+                                            username={gif.username}
+                                            rating={gif.rating}
+                                            addToCollection={() => this.props.addToCollection(gif.id, gif)}
+                                            removeFromCollection={() => this.props.removeFromCollection(gif.id)}
+                                        /> 
+                                    )) 
+                                ) : 'Oh no, your collection is empty :/'
                             }
                         </Collection>
                     </div>

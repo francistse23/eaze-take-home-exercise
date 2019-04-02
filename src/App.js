@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
-// import './App.css';
 import axios from 'axios';
 import styled from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
@@ -10,6 +8,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { maxAppWidth, smallScreen, mediumScreen, largeScreen, gutter, EazeBlue, EazeGold } from './lib/constants';
 import { SearchBar } from './components/SearchBar';
 import { DraggableGIF } from './components/DraggableGIF';
+import GIF from './components/GIF';
 import GIFCollection from './components/GIFCollection';
 
 const AppPageContainer = styled.section`
@@ -75,7 +74,7 @@ const Page = styled.div`
   display: flex;
   flex-direction: column;
   padding: ${gutter*15}px ${gutter}px;
-  background-color: #ccc;
+  background-color: #333;
   color: ${EazeBlue};
   @media (max-width: ${mediumScreen}px) {
     padding: ${gutter}px;
@@ -106,40 +105,58 @@ const key = process.env.REACT_APP_API_KEY || 'dc6zaTOxFJmzC';
 // Controls the offset amount in GIPHY's API
 const offset = 25;
 
+// namespace for local storage key
+const namespace = 'Eaze_GIF_';
+
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
       collection: [],
       collectionId: [],
+      isOpen: false,
       nsfw: false,
       offset: 0,
       paused: false,
       query: '',
+      random: [],
       results: [],
       total: 0,
       type: 'gifs',
     }
   }  
   // add the selected GIF to collection
+  // addToCollection = (id, gif) => {
+  //   localStorage.setItem(id, JSON.stringify(gif));
+  // }
   addToCollection = (id, gif) => {
-    localStorage.setItem(id, JSON.stringify(gif));
+    let { collection, collectionId } = this.state;
+    if ( !collectionId.includes(id) ){
+      let obj = {};
+      obj[id] = gif;
+      collection.push(obj);
+      collectionId.push(id)
+      this.setState(() => ({ collection }));
+    }
   }
   // renders collection saved in localStorage
-  collection = () => {
-    let collect = [];
-    let collectId = [];
-    for ( let i = 0, len = localStorage.length; i < len; i++ ){
-      let key = String(localStorage.key(i))
-      let value = JSON.parse(localStorage[key]);
-      // it'll only add the GIF/sticker into the collection if it isn't in the collection
-      if ( !collectId.includes(value.id) ){
-        collectId.push(key)
-        collect.push(value);
-      }
-    }
-    this.setState(() => ({ collection: collect, collectionId: collectId }));
-  }
+  // collection = () => {
+  //   let collect = [];
+  //   let collectId = [];
+  //   for ( let i = 0, len = localStorage.length; i < len; i++ ){
+  //     let key = String(localStorage.key(i));
+  //     let value = JSON.parse(localStorage[key]);
+  //     // it'll only add the GIF/sticker into the collection if it isn't in the collection
+  //     if ( !collectId.includes(value.id) ){
+  //       collectId.push(key)
+  //       collect.push(value);
+  //     }
+  //   }
+  //   this.setState(() => ({ collection: collect, collectionId: collectId }));
+  // }
+  // collection = () => {
+
+  // }
   // retrieves all trending GIFs/Stickers from GIPHY
   initialize = () => {
     // GIPHY's public beta key, didn't use env since it's public. could set up as env var if needed
@@ -165,13 +182,20 @@ class App extends Component {
       });
   };
   // remove the selected GIF from collection
+  // removeFromCollection = id => {
+  //   localStorage.removeItem(id);
+  //   let collectId = this.state.collectionId;
+  //   // splice the ID out of the collectionId state
+  //   // once it's spliced, it won't be rendered out by this.collection()
+  //   collectId.splice(collectId.indexOf(id), 1);
+  //   this.setState({ collectionId: collectId })
+  // }
   removeFromCollection = id => {
-    localStorage.removeItem(id);
-    let collectId = this.state.collectionId;
-    // splice the ID out of the collectionId state
-    // once it's spliced, it won't be rendered out by this.collection()
-    collectId.splice(collectId.indexOf(id), 1);
-    this.setState({ collectionId: collectId })
+    let { collection, collectionId } = this.state;
+    let index = collection.map( gif => { return gif.id}).indexOf(id);
+    collection.splice(index, 1);
+    collectionId.splice(index, 1);
+    this.setState(() => ({ collection, collectionId }));
   }
   // enable/disable NSFW content && toggle to show either GIFs or stickers
   toggle = e => {
@@ -189,12 +213,24 @@ class App extends Component {
       this.setState({ confirmModal: !this.state.confirmModal });
     }
   }
+  // Modal toggle
+  toggleModal = () => {
+    this.setState({ 
+      isOpen: false,
+      random: []
+    })
+  }
   componentDidMount(){
     // by default, the page will load trending content on start
     this.initialize();
-
+    // this will show collection
+    // this.collection();
   };
+  // componentDidUpdate(prevState){
+  // 
+  // };
   render() {
+    console.log(this.state.collection)
     // will only return Rated G GIFs if NSFW is false
     let results =  this.state.nsfw === true ? 
                 this.state.results : 
@@ -245,6 +281,24 @@ class App extends Component {
             <PageContent>
 
               <GIFs>
+                {/*  render random GIF if there's one */}
+                {this.state.random.length === 0 ? '' :
+                    <GIF 
+                      key={this.state.random[0]['id']}
+                      id={this.state.random[0]['id']}
+                      url={this.state.random[0]['images'][`${this.state.paused ? 'fixed_width_still' : 'fixed_width_downsampled'}`]['url']}
+                      HDurl={this.state.random[0]['images']['original']['url']}
+                      title={this.state.random[0]['title']}
+                      alt={this.state.random[0]['title']}
+                      username={this.state.random[0]['username']}
+                      isOpen={true}
+                      addToCollection={() => this.addToCollection(this.state.random[0]['id'], this.state.random[0])}
+                      removeFromCollection={() => this.removeFromCollection(this.state.random[0]['id'])}
+                      randomize={this.randomize}
+                      toggleModal={this.toggleModal}
+                    />
+                }
+
                 {/* renders the trending/searched GIFs/Stickers */}
                 {results.map( result => (
                   <DraggableGIF 
