@@ -10,7 +10,7 @@ import debounce from 'lodash/debounce';
 import { maxAppWidth, smallScreen, mediumScreen, largeScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
 import { SearchBar } from './components/SearchBar';
 import { DraggableGIF } from './components/DraggableGIF';
-import GIF from './components/GIF';
+import GIF, { StyledModal } from './components/GIF';
 import GIFCollection from './components/GIFCollection';
 
 const AppPageContainer = styled.section`
@@ -127,6 +127,7 @@ class App extends Component {
     this.state = {
       collection: [],
       collectionId: [],
+      confirmModal: false,
       isOpen: false,
       nsfw: false,
       offset: 0,
@@ -142,6 +143,10 @@ class App extends Component {
   // add the selected GIF to collection
   addToCollection = (id, gif) => {
     localStorage.setItem(`${namespace}${id}`, JSON.stringify(gif));
+    let { collection, collectionId } = this.state;
+    collection.push(gif);
+    collectionId.push(id);
+    this.setState({ collection, collectionId}, () => this.collection());
   }
   // renders collection saved in localStorage
   collection = () => {
@@ -160,6 +165,11 @@ class App extends Component {
       }
     }
     this.setState(() => ({ collection, collectionId }));
+  }
+  // clears collection
+  clearCollection = () => {
+    localStorage.clear();
+    this.setState({ confirmModal: false });
   }
   // handles change in search input
   handleChange = e => {
@@ -229,10 +239,12 @@ class App extends Component {
   };
   // remove the selected GIF from collection
   removeFromCollection = id => {
-    let { collectionId } = this.state;
+    let { collection, collectionId } = this.state;
+    let index = collection.filter( gif => gif.id === id);
+    collection.splice(index, 1);
     collectionId.splice(collectionId.indexOf(id), 1);
     localStorage.removeItem(`${namespace}${id}`);
-    this.setState({ collectionId })
+    this.setState({ collectionId }, () => this.collection())
   }
   // search function to parse query and send API call the the search endpoint
   search = () => {
@@ -279,7 +291,6 @@ class App extends Component {
     this.initialize();
     // this will show collection
     this.collection();
-    setInterval(() => this.collection(), 500);
   };
   render() {
     // will only return Rated G GIFs if NSFW is false
@@ -300,7 +311,9 @@ class App extends Component {
         <ModalProvider>
           {/* Navbar */}
           <AppHeader>
-            <span style={{ fontFamily: 'Vibur', fontSize: '5rem', color: 'white' }} >eaze</span>
+            <span style={{ fontFamily: 'Vibur', fontSize: '5rem', color: 'white' }}>
+              eaze
+            </span>
             <SearchBar 
               query={this.state.query}
               handleChange={this.handleChange}
@@ -327,6 +340,7 @@ class App extends Component {
               {/* Randomizer */}
               <Button onClick={this.randomize}>Surprise Me :)</Button>
 
+            
               {/* Clear Collection */}
               {this.state.collection.length > 0 ? 
                 <Button name='confirmModal' style={{ background: 'red', color: 'white' }} onClick={this.toggle}>
@@ -334,6 +348,22 @@ class App extends Component {
                 </Button> : ''
               }
 
+              {this.state.confirmModal ?
+                <StyledModal isOpen={this.state.confirmModal}>
+                  <h1 style={{ padding: `${gutter*2}px` }}>
+                    Are you sure you want to delete your collection? There's no turning back!
+                  </h1>
+                  <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <Button 
+                      onClick={this.clearCollection}
+                      style={{ background: 'red', color: 'white', padding: `${gutter}px` }}
+                    >
+                      Yup!
+                    </Button>
+                    <Button name='confirmModal' onClick={this.toggle}>I Changed My Mind!</Button>
+                  </div>
+                </StyledModal> : ''
+              }
             </PageHeader>
             
             <PageContent>
