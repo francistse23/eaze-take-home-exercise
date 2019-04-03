@@ -9,7 +9,7 @@ import debounce from 'lodash/debounce';
 import { maxAppWidth, smallScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
 import { SearchBar } from './components/SearchBar';
 import Home from './components/Home';
-import GIFCollection from './components/GIFCollection';
+// import GIFCollection from './components/GIFCollection';
 
 const AppPageContainer = styled.section`
   display: flex;
@@ -52,66 +52,6 @@ const Button = styled.button`
       color: ${EazeBlue};
   }
 `;
-
-// const Footer = styled.footer`
-//   position: fixed;
-//   bottom: 0;
-//   display: flex; 
-//   justify-content: space-around;
-//   width: 100%;
-//   padding: ${gutter}px;
-//   margin-top: ${gutter*2}px;
-//   border-top: 2px solid ${EazeGold};
-//   color: ${EazeBlue};
-//   background: ${EazeGold};
-// `;
-
-// const GIFs = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-//   margin-left: 15%;
-//   max-width: ${maxAppWidth*1.5}px;
-//   @media(max-width: ${largeScreen}px){
-//     margin-left: 10%;
-//     margin-right: 20%;
-//   }
-//   @media(max-width: ${mediumScreen}px ){
-//     margin-left: 1%;
-//     width: 60%;
-//   }
-//   @media(max-width: ${smallScreen}px ){
-//     margin-left: 0;
-//   }
-// `;
-
-// const Page = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   padding: ${gutter*15}px ${gutter}px;
-//   background-color: #333;
-//   color: ${EazeBlue};
-//   @media (max-width: ${mediumScreen}px) {
-//     padding: ${gutter}px;
-//     margin: 0;
-//   }
-//   @media (max-width: ${smallScreen}px) {
-//     padding: ${gutter}px;
-//   }
-// `;
-
-// const PageContent = styled.div`
-//   display: flex;
-// `;
-
-// const PageHeader = styled.div`
-//   display: flex;
-//   justify-content: space-around;
-//   margin: ${gutter}px;
-//   padding: ${gutter*2}px;
-//   @media(max-width: ${smallScreen}px){
-//     flex-direction: column;
-//   }
-// `;
 
 // sets key to env var if there's one. if not, set the key to GIPHY's public beta key
 const key = process.env.REACT_APP_API_KEY || 'dc6zaTOxFJmzC';
