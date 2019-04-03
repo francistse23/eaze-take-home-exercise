@@ -11,3 +11,6 @@ export const gutter = 16;
 // colors
 export const EazeBlue = '#00a6e0';
 export const EazeGold = '#faca18';
+
+// namespace for local storage key
+export const namespace = 'Eaze_GIF_';

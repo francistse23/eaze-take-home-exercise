@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import { Route } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
@@ -6,7 +7,7 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import debounce from 'lodash/debounce';
 
-import { maxAppWidth, smallScreen, mediumScreen, largeScreen, gutter, EazeBlue, EazeGold } from './lib/constants';
+import { maxAppWidth, smallScreen, mediumScreen, largeScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
 import { SearchBar } from './components/SearchBar';
 import { DraggableGIF } from './components/DraggableGIF';
 import GIF from './components/GIF';
@@ -120,9 +121,6 @@ const key = process.env.REACT_APP_API_KEY || 'dc6zaTOxFJmzC';
 // Controls the offset amount in GIPHY's API
 const offset = 25;
 
-// namespace for local storage key
-const namespace = 'Eaze_GIF_';
-
 class App extends Component {
   constructor(props){
     super(props);
@@ -143,12 +141,7 @@ class App extends Component {
   }  
   // add the selected GIF to collection
   addToCollection = (id, gif) => {
-    // let { collection, collectionId } = this.state;
-    // collection.push(gif);
-    // collectionId.push(id);
     localStorage.setItem(`${namespace}${id}`, JSON.stringify(gif));
-    // this.setState({ collection, collectionId });
-    console.log('added')
   }
   // renders collection saved in localStorage
   collection = () => {
@@ -237,17 +230,9 @@ class App extends Component {
   // remove the selected GIF from collection
   removeFromCollection = id => {
     let { collectionId } = this.state;
-    // if ( collection.length === 1 && collection[0]['id'] === id ){
-    //   collection.pop();
-    //   collectionId.pop();
-    // } else {
-    //   let item = collection.filter( gif => gif.id === id );
-    //   collection.splice(collection.indexOf(item), 1);
-      collectionId.splice(collectionId.indexOf(id), 1);
-    // }
+    collectionId.splice(collectionId.indexOf(id), 1);
     localStorage.removeItem(`${namespace}${id}`);
     this.setState({ collectionId })
-    console.log('removed')
   }
   // search function to parse query and send API call the the search endpoint
   search = () => {
@@ -296,13 +281,7 @@ class App extends Component {
     this.collection();
     setInterval(() => this.collection(), 500);
   };
-  // componentDidUpdate(prevProps, prevState){
-  //   if ( this.state.collectionId.length !== prevState.collectionId.length ){
-  //     this.collection();
-  //   }
-  // }
   render() {
-    // console.log(this.state.collection)
     // will only return Rated G GIFs if NSFW is false
     let results = this.state.nsfw === true ? 
                   this.state.results : 
@@ -310,6 +289,13 @@ class App extends Component {
     // shows how many GIFs were not shown because they are not rated G
     let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
     return (
+      // <Route exact path='/collection' render={(props) => <GIFCollection {...props}
+      //   paused={this.state.paused}
+      //   collection={this.state.collection}
+      //   collectionId={this.state.collectionId}
+      //   addToCollection={this.addToCollection}
+      //   removeFromCollection={this.removeFromCollection}
+      // /> } />
       <AppPageContainer>
         <ModalProvider>
           {/* Navbar */}
@@ -380,6 +366,7 @@ class App extends Component {
                     key={result.id}
                     {...result}
                     paused={this.state.paused}
+                    collectionId={this.state.collectionId}
                     addToCollection={() => this.addToCollection(result.id, {...result})}
                     removeFromCollection={() => this.removeFromCollection(result.id)}
                     randomize={this.randomize}
@@ -390,6 +377,7 @@ class App extends Component {
                 <GIFCollection 
                   paused={this.state.paused}
                   collection={this.state.collection}
+                  collectionId={this.state.collectionId}
                   addToCollection={this.addToCollection}
                   removeFromCollection={this.removeFromCollection}
                 />

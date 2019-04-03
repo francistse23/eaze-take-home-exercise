@@ -51,49 +51,17 @@ export const StyledModal = Modal.styled`
     border: 2px solid ${EazeGold};
 `
 
-const namespace = 'Eaze_GIF_';
-
 class GIF extends Component {
     constructor(props){
         super(props);
         this.state = {
             isOpen: false,
-            collectionId: [],
         }
-    }
-    // renders the collection and store it in state as an array of IDs
-    // used to check if user can add/remove the GIF
-    collection = () => {
-        let { collectionId } = this.state;
-        for ( let i = 0, len = localStorage.length; i < len; i++ ){
-            let key = String(localStorage.key(i))
-            collectionId.push(key.replace(`${namespace}`, ''));
-        }
-        this.setState(() => ({ collectionId }));
-    }
-    // adds ID to this.state.collectionId
-    addCollectionId = id => {
-        let { collectionId } = this.state;
-        collectionId.push(id);
-        this.setState({ collectionId }, () => {
-            this.props.addToCollection();
-        });
-    }
-    // removes ID to this.state.collectionId
-    removeCollectionId = id => {
-        let { collectionId } = this.state;
-        collectionId.splice(collectionId.indexOf(id), 1);
-        this.setState({ collectionId }, () => { 
-            this.props.removeFromCollection(); 
-        });
     }
     // Modal toggle
     toggleModal = () => {
         this.setState({ isOpen: !this.state.isOpen })
     };
-    componentDidMount(){
-        this.collection();
-    }
     render() {
         return (
             <Div key={this.props.id} rating={this.props.rating}>
@@ -129,14 +97,14 @@ class GIF extends Component {
                     <h5>Uploaded by: {this.props.username !== '' ? this.props.username : 'Unknown User'}</h5>
                     <h5>Uploaded on: {this.props.uploadDate !== '' && this.props.uploadDate !== undefined ? this.props.uploadDate.slice(0,10) : 'Unknown'}</h5>
                     <div>
-                        {this.state.collectionId.includes(this.props.id) ? 
+                        {this.props.collectionId.includes(this.props.id) ? 
                             <Button
-                                onClick={() => this.removeCollectionId(this.props.id) }
+                                onClick={() => this.props.removeFromCollection(this.props.id) }
                             >
                                 Remove from Collection
                             </Button> :
                             <Button 
-                                onClick={() => this.addCollectionId(this.props.id) }
+                                onClick={() => this.props.addToCollection(this.props.id) }
                             >
                                 Add to Collection
                             </Button>

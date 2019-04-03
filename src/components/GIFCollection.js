@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { DropTarget } from 'react-dnd';
 import { EazeBlue, EazeGold, maxAppWidth, gutter, smallScreen, mediumScreen, largeScreen, xLargeScreen } from '../lib/constants';
 import { DraggableGIF } from './DraggableGIF';
+import { namespace } from '../lib/constants';
 
 const Container = styled.div`
     display: flex;
@@ -54,8 +55,6 @@ const Collection = styled.div`
     color: ${EazeGold};
 `;
 
-const namespace = 'Eaze_GIF_';
-
 const TargetDropzone = DropTarget (
     'result',
     {
@@ -79,6 +78,45 @@ const TargetDropzone = DropTarget (
 )
 
 class GIFCollection extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            collectionId: [],
+        }
+    }
+    // renders the collection and store it in state as an array of IDs
+    // used to check if user can add/remove the GIF
+    collection = () => {
+        let { collectionId } = this.state;
+        for ( let i = 0, len = localStorage.length; i < len; i++ ){
+            let key = String(localStorage.key(i))
+            if ( !collectionId.includes(namespace) || collectionId.includes(key.replace(`${namespace}`, '')) ) {
+                break;
+            } else {
+                collectionId.push(key.replace(`${namespace}`, ''));
+            }
+        }
+        this.setState(() => ({ collectionId }));
+    }
+    // adds ID to this.state.collectionId
+    addCollectionId = id => {
+        let { collectionId } = this.state;
+        collectionId.push(id);
+        this.setState({ collectionId }, () => {
+            this.props.addToCollection();
+        });
+    }
+    // removes ID to this.state.collectionId
+    removeCollectionId = id => {
+        let { collectionId } = this.state;
+        collectionId.splice(collectionId.indexOf(id), 1);
+        this.setState({ collectionId }, () => { 
+            this.props.removeFromCollection(); 
+        });
+    }
+    componentDidMount(){
+        this.collection();
+    }
     render() {
         const { collection, canDrop, isOver, connectDropTarget } = this.props        
         return (
@@ -100,6 +138,7 @@ class GIFCollection extends Component {
                                         username={gif.username}
                                         uploadDate={gif.import_datetime}
                                         rating={gif.rating}
+                                        collectionId={this.props.collectionId}
                                         addToCollection={() => this.props.addToCollection(gif.id, gif)}
                                         removeFromCollection={() => this.props.removeFromCollection(gif.id)}
                                     />                          

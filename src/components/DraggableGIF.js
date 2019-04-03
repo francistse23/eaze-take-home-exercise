@@ -1,11 +1,12 @@
 import React from 'react';
 import { DragSource } from 'react-dnd';
 import GIF from './GIF';
+import { namespace } from '../lib/constants';
 
 const DndTypes = {
     RESULT: 'result',
 };
-  
+
 const Result = props => props.connectDragSource(
     <span>
       <GIF 
@@ -19,6 +20,7 @@ const Result = props => props.connectDragSource(
         username={props.username}
         rating={props.rating}
         uploadDate={props.import_datetime}
+        collectionId={props.collectionId}
         addToCollection={props.addToCollection}
         removeFromCollection={props.removeFromCollection}
         randomize={props.randomize}
@@ -37,7 +39,7 @@ export const DraggableGIF = DragSource(
       // if item is not dropped into target zone
       // check to see if item is in targetzone
       // if it is, remove it from localStorage (collection, collectionID state)
-      if (!monitor.didDrop() && localStorage.getItem(`Eaze_GIF_${props.id}`)) {
+      if (!monitor.didDrop() && localStorage.getItem(`${namespace}${props.id}`)) {
           props.removeFromCollection(props.id)
       }
       return;
