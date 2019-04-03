@@ -143,25 +143,27 @@ class App extends Component {
   }  
   // add the selected GIF to collection
   addToCollection = (id, gif) => {
-    let { collection, collectionId } = this.state;
-    collection.push(gif);
-    collectionId.push(id);
+    // let { collection, collectionId } = this.state;
+    // collection.push(gif);
+    // collectionId.push(id);
     localStorage.setItem(`${namespace}${id}`, JSON.stringify(gif));
-    this.setState({ collection, collectionId });
+    // this.setState({ collection, collectionId });
+    console.log('added')
   }
   // renders collection saved in localStorage
   collection = () => {
-    let { collection, collectionId } = this.state;
+    let collection = [], collectionId = [];
     for ( let i = 0, len = localStorage.length; i < len; i++ ){
       let key = String(localStorage.key(i));
       if ( !key.includes(namespace) ){
         break;
-      }
-      let value = JSON.parse(localStorage[key]);
-      // it'll only add the GIF/sticker into the collection if it isn't in the collection
-      if ( !collectionId.includes(value.id) ){
-        collectionId.push(key.replace('Eaze_GIF_', ''))
-        collection.push(value);
+      } else {
+        let value = JSON.parse(localStorage[key]);
+        // it'll only add the GIF/sticker into the collection if it isn't in the collection
+        if ( !collectionId.includes(value.id) ){
+          collectionId.push(key.replace('Eaze_GIF_', ''))
+          collection.push(value);
+        }
       }
     }
     this.setState(() => ({ collection, collectionId }));
@@ -234,17 +236,18 @@ class App extends Component {
   };
   // remove the selected GIF from collection
   removeFromCollection = id => {
-    let { collection, collectionId } = this.state;
-    if ( collection.length === 1 && collection[0]['id'] === id ){
-      collection.pop();
-      collectionId.pop();
-    } else {
-      let item = collection.filter( gif => gif.id === id );
-      collection.splice(collection.indexOf(item), 1);
+    let { collectionId } = this.state;
+    // if ( collection.length === 1 && collection[0]['id'] === id ){
+    //   collection.pop();
+    //   collectionId.pop();
+    // } else {
+    //   let item = collection.filter( gif => gif.id === id );
+    //   collection.splice(collection.indexOf(item), 1);
       collectionId.splice(collectionId.indexOf(id), 1);
-    }
+    // }
     localStorage.removeItem(`${namespace}${id}`);
-    this.setState({ collection, collectionId })
+    this.setState({ collectionId })
+    console.log('removed')
   }
   // search function to parse query and send API call the the search endpoint
   search = () => {
@@ -291,15 +294,15 @@ class App extends Component {
     this.initialize();
     // this will show collection
     this.collection();
-    // setInterval(() => this.collection(), 500);
+    setInterval(() => this.collection(), 500);
   };
-  componentDidUpdate(prevProps, prevState){
-    if ( this.state.collectionId.length !== prevState.collectionId.length ){
-      this.collection();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState){
+  //   if ( this.state.collectionId.length !== prevState.collectionId.length ){
+  //     this.collection();
+  //   }
+  // }
   render() {
-    console.log(this.state.collection)
+    // console.log(this.state.collection)
     // will only return Rated G GIFs if NSFW is false
     let results = this.state.nsfw === true ? 
                   this.state.results : 
@@ -380,8 +383,8 @@ class App extends Component {
                     addToCollection={() => this.addToCollection(result.id, {...result})}
                     removeFromCollection={() => this.removeFromCollection(result.id)}
                     randomize={this.randomize}
-                    />
-                  ))}
+                  />
+                ))}
 
                 {/* Area to drop GIFs */}
                 <GIFCollection 

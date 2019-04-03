@@ -58,34 +58,32 @@ class GIF extends Component {
         super(props);
         this.state = {
             isOpen: false,
-            collection: [],
+            collectionId: [],
         }
     }
     // renders the collection and store it in state as an array of IDs
     // used to check if user can add/remove the GIF
     collection = () => {
-        let { collection } = this.state;
+        let { collectionId } = this.state;
         for ( let i = 0, len = localStorage.length; i < len; i++ ){
-            if ( String(localStorage.key(i).includes(namespace)) ){
-                let key = String(localStorage.key(i)).replace(namespace, '');
-                collection.push(key);
-            }
+            let key = String(localStorage.key(i))
+            collectionId.push(key.replace(`${namespace}`, ''));
         }
-        this.setState(() => ({ collection }));
+        this.setState(() => ({ collectionId }));
     }
-    // adds ID to this.state.collection
+    // adds ID to this.state.collectionId
     addCollectionId = id => {
-        let { collection } = this.state;
-        collection.push(id);
-        this.setState({ collection }, () => {
+        let { collectionId } = this.state;
+        collectionId.push(id);
+        this.setState({ collectionId }, () => {
             this.props.addToCollection();
         });
     }
-    // removes ID to this.state.collection
+    // removes ID to this.state.collectionId
     removeCollectionId = id => {
-        let collection = this.state.collection;
-        collection.splice(collection.indexOf(id), 1);
-        this.setState({ collection }, () => { 
+        let { collectionId } = this.state;
+        collectionId.splice(collectionId.indexOf(id), 1);
+        this.setState({ collectionId }, () => { 
             this.props.removeFromCollection(); 
         });
     }
@@ -131,7 +129,7 @@ class GIF extends Component {
                     <h5>Uploaded by: {this.props.username !== '' ? this.props.username : 'Unknown User'}</h5>
                     <h5>Uploaded on: {this.props.uploadDate !== '' && this.props.uploadDate !== undefined ? this.props.uploadDate.slice(0,10) : 'Unknown'}</h5>
                     <div>
-                        {this.state.collection.includes(this.props.id) ? 
+                        {this.state.collectionId.includes(this.props.id) ? 
                             <Button
                                 onClick={() => this.removeCollectionId(this.props.id) }
                             >
