@@ -96,6 +96,7 @@ export const SearchBar = props => {
             <Search>
                 <Button 
                     name='paused'
+                    title={`${props.paused ? 'play' : 'pause' } animation`}
                     onClick={props.toggle}
                     style={{ backgroundImage: `${props.paused ? `url(${play})`: `url(${pause})`}`  }}
                 />

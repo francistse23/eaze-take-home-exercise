@@ -156,13 +156,13 @@ class Home extends Component {
                     {/* renders the trending/searched GIFs/Stickers */}
                     {this.props.results.map( result => (
                         <DraggableGIF 
-                        key={result.id}
-                        {...result}
-                        paused={this.props.paused}
-                        collectionId={this.props.collectionId}
-                        addToCollection={() => this.props.addToCollection(result.id, {...result})}
-                        removeFromCollection={() => this.props.removeFromCollection(result.id)}
-                        randomize={this.props.randomize}
+                            key={result.id}
+                            {...result}
+                            paused={this.props.paused}
+                            collectionId={this.props.collectionId}
+                            addToCollection={() => this.props.addToCollection(result.id, {...result})}
+                            removeFromCollection={() => this.props.removeFromCollection(result.id)}
+                            randomize={this.props.randomize}
                         />
                     ))}
             
@@ -171,6 +171,7 @@ class Home extends Component {
                         paused={this.props.paused}
                         collection={this.props.collection}
                         collectionId={this.props.collectionId}
+                        randomize={this.props.randomize}
                         addToCollection={this.props.addToCollection}
                         removeFromCollection={this.props.removeFromCollection}
                     />

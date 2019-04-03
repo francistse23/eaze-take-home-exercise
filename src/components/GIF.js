@@ -23,12 +23,15 @@ const Div = styled.div`
     margin: ${gutter/2}px;
     padding: ${gutter/2}px;
     border: ${props => props.rating !== 'g' && props.rating !== undefined ? '2px solid red' : '' };
+    border-radius: 5px;
     background: white;
+    max-width: 300px;
     max-height: 90%;
     text-align: center;
     &:hover{
+        cursor: pointer;
         transform: scale(1.1);
-        box-shadow: 1px -1px 20px ${EazeBlue};
+        box-shadow: 1px -1px 20px ${EazeGold};
     }
     @media(max-width: ${mediumScreen}px){
         width: 50%;
@@ -41,6 +44,7 @@ const Div = styled.div`
 export const StyledModal = Modal.styled`
     width: 75rem;
     height: 75rem;
+    font-size: 1.2rem;
     display: flex;
     flex-direction: column;
     align-items: center;

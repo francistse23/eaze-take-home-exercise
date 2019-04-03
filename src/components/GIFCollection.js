@@ -118,7 +118,7 @@ class GIFCollection extends Component {
         this.collection();
     }
     render() {
-        const { collection, canDrop, isOver, connectDropTarget } = this.props        
+        const { collection, canDrop, isOver, connectDropTarget } = this.props;  
         return (
             <Container canDrop={canDrop} isOver={isOver} rating={this.props.rating}>
                 {connectDropTarget (
@@ -139,6 +139,7 @@ class GIFCollection extends Component {
                                         uploadDate={gif.import_datetime}
                                         rating={gif.rating}
                                         collectionId={this.props.collectionId}
+                                        randomize={this.props.randomize}
                                         addToCollection={() => this.props.addToCollection(gif.id, gif)}
                                         removeFromCollection={() => this.props.removeFromCollection(gif.id)}
                                     />                          

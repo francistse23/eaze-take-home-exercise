@@ -243,7 +243,6 @@ class App extends Component {
     let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
     return (
       <AppPageContainer>
-  
 
           {/* Navbar */}
           <AppHeader>
@@ -285,6 +284,7 @@ class App extends Component {
               toggleModal={this.toggleModal}
             /> } 
           />
+
           {/* <Route exact path='/collection' render={(props) => <GIFCollection {...props}
             paused={this.state.paused}
             collection={this.state.collection}
@@ -292,9 +292,7 @@ class App extends Component {
             addToCollection={this.addToCollection}
             removeFromCollection={this.removeFromCollection}
           /> } /> */}
-          
 
-      
       </AppPageContainer>
     );
   }
