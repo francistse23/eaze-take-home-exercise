@@ -87,7 +87,7 @@ class GIFCollection extends Component {
             <Container canDrop={canDrop} isOver={isOver} rating={this.props.rating}>
                 {connectDropTarget (
                     <div>
-                        <h3>Drag & Drop GIFs/Stickers here to store them in your collection :)</h3>
+                        <h3 style={{ fontFamily: 'Megrim' }}>Drag & Drop GIFs/Stickers here to store them in your collection :)</h3>
                         <Collection>
                             {collection.length > 0 ? 
                                 collection.map( gif => (                              

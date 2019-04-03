@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import debounce from 'lodash/debounce';
 
 import { maxAppWidth, smallScreen, mediumScreen, largeScreen, gutter, EazeBlue, EazeGold } from './lib/constants';
 import { SearchBar } from './components/SearchBar';
@@ -50,6 +51,19 @@ const Button = styled.button`
       background-color: ${EazeGold};
       color: ${EazeBlue};
   }
+`;
+
+const Footer = styled.footer`
+  position: fixed;
+  bottom: 0;
+  display: flex; 
+  justify-content: space-around;
+  width: 100%;
+  padding: ${gutter}px;
+  margin-top: ${gutter*2}px;
+  border-top: 2px solid ${EazeGold};
+  color: ${EazeBlue};
+  background: ${EazeGold};
 `;
 
 const GIFs = styled.div`
@@ -117,6 +131,7 @@ class App extends Component {
       isOpen: false,
       nsfw: false,
       offset: 0,
+      page: 1,
       paused: false,
       query: '',
       random: [],
@@ -126,17 +141,19 @@ class App extends Component {
     }
   }  
   // add the selected GIF to collection
-  // addToCollection = (id, gif) => {
-  //   localStorage.setItem(id, JSON.stringify(gif));
-  // }
   addToCollection = (id, gif) => {
+    let { collection, collectionId } = this.state;
+    collection.push(gif);
+    collectionId.push(id);
     localStorage.setItem(`${namespace}${id}`, JSON.stringify(gif));
+    this.setState({ collection, collectionId });
   }
   // renders collection saved in localStorage
   collection = () => {
     let { collection, collectionId } = this.state;
     for ( let i = 0, len = localStorage.length; i < len; i++ ){
       let key = String(localStorage.key(i));
+      console.log(key)
       if ( !key.includes(namespace) ){
         break;
       }
@@ -147,13 +164,30 @@ class App extends Component {
         collection.push(value);
       }
     }
-    this.setState({ collection, collectionId })
+    this.setState(() => ({ collection, collectionId }));
   }
+  // handles change in search input
+  handleChange = e => {
+    this.setState({ 
+      [e.target.name]: e.target.value,
+      offset: 0,
+      page: 1
+    }, () => {
+      // debounce to limit API calls
+      if (this.state.query.length > 1) {
+        this.debouncedSearch();
+      } else {
+        // resets results to trending if search query is empty
+        this.setState({ 
+          results: [],
+          offset: 0,
+          page: 1
+        }, () => this.initialize());
+      }
+    });
+  };
   // retrieves all trending GIFs/Stickers from GIPHY
   initialize = () => {
-    // GIPHY's public beta key, didn't use env since it's public. could set up as env var if needed
-    // the public beta key does not return more than 25 result despite setting limit in query string
-    // tested with my own API key
     axios.get(`http://api.giphy.com/v1/${this.state.type}/trending?api_key=${key}&offset=${this.state.offset}`)
         .then( res => {
             this.setState({ 
@@ -161,6 +195,31 @@ class App extends Component {
                 total: res.data.pagination.total_count
             })
         });
+  }
+  // "Turns the page"
+  offset = e => {
+  e.preventDefault();
+  if ( e.target.name === 'next' ) {
+      // increases offset by 25 to view the next 25 results
+      // increments page by 1
+      this.setState({ offset: this.state.offset + offset, page: this.state.page + 1 }, () => {
+          if ( this.state.query.length > 1) {
+              this.search();
+          } else {
+              this.initialize()
+          }
+      });
+  } else if ( e.target.name === 'previous' && this.state.offset >= 25 ) {
+      // decreases offset by 25 to view the previous 25 results
+      // decrements page by 1
+      this.setState({ offset: this.state.offset - offset, page: this.state.page - 1 }, () => {
+          if ( this.state.query.length > 1) {
+              this.search();
+          } else {
+              this.initialize()
+          }
+      });
+    }
   }
   // Return random GIF/Sticker, this.state.query acts as tags
   randomize = () => {
@@ -175,12 +234,17 @@ class App extends Component {
   };
   // remove the selected GIF from collection
   removeFromCollection = id => {
+    let { collection, collectionId } = this.state;
+    if ( collection.length === 1 && collection[0]['id'] === id ){
+      collection.pop();
+      collectionId.pop();
+    } else {
+      let item = collection.filter( gif => gif.id === id );
+      collection.splice(collection.indexOf(item), 1);
+      collectionId.splice(collectionId.indexOf(id), 1);
+    }
     localStorage.removeItem(`${namespace}${id}`);
-    let { collectionId } = this.state;
-    // splice the ID out of the collectionId state
-    // once it's spliced, it won't be rendered out by this.collection()
-    collectionId.splice(collectionId.indexOf(id), 1);
-    this.setState({ collectionId })
+    this.setState({ collection, collectionId })
   }
   // search function to parse query and send API call the the search endpoint
   search = () => {
@@ -197,6 +261,8 @@ class App extends Component {
       this.initialize();
     }
   }
+  // debounce search function
+  debouncedSearch = debounce(this.search, 500);
   // enable/disable NSFW content && toggle to show either GIFs or stickers
   toggle = e => {
     if (e.target.name === 'nsfw'){
@@ -208,7 +274,7 @@ class App extends Component {
         this.setState({ type: 'gifs' }, () => this.search());
       }
     } else if ( e.target.name === 'paused' ){
-      this.setState(() => ({ paused: !this.state.paused }));
+      this.setState({ paused: !this.state.paused });
     } else if ( e.target.name === 'confirmModal' ){
       this.setState({ confirmModal: !this.state.confirmModal });
     }
@@ -225,15 +291,18 @@ class App extends Component {
     this.initialize();
     // this will show collection
     this.collection();
+    // setInterval(() => this.collection(), 500);
   };
-  // componentDidUpdate(prevState){
-  // 
-  // };
+  componentDidUpdate(prevProps, prevState){
+    if ( this.state.collectionId.length !== prevState.collectionId.length ){
+      this.collection();
+    }
+  }
   render() {
     // will only return Rated G GIFs if NSFW is false
-    let results =  this.state.nsfw === true ? 
-                this.state.results : 
-                this.state.results.filter( gif => gif.rating === 'g' ); 
+    let results = this.state.nsfw === true ? 
+                  this.state.results : 
+                  this.state.results.filter( gif => gif.rating === 'g' ); 
     // shows how many GIFs were not shown because they are not rated G
     let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
     return (
@@ -320,8 +389,13 @@ class App extends Component {
                 />
               </GIFs>
             </PageContent>
-
           </Page>
+
+          <Footer>
+            <Button name='previous' onClick={this.offset}>Previous</Button>
+            <h2>{this.state.page}</h2>
+            <Button name='next' onClick={this.offset}>Next</Button>
+          </Footer>
 
         </ModalProvider>
       </AppPageContainer>
