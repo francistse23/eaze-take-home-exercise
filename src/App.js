@@ -169,7 +169,11 @@ class App extends Component {
   // clears collection
   clearCollection = () => {
     localStorage.clear();
-    this.setState({ confirmModal: false });
+    this.setState({ 
+      collection: [],
+      collectionId: [],
+      confirmModal: false
+    });
   }
   // handles change in search input
   handleChange = e => {
