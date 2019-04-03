@@ -78,8 +78,6 @@ const TargetDropzone = DropTarget (
     })
 )
 
-// ADD CLEAR ALL BUTTON ?
-
 class GIFCollection extends Component {
     render() {
         const { collection, canDrop, isOver, connectDropTarget } = this.props        
@@ -100,6 +98,7 @@ class GIFCollection extends Component {
                                         alt={gif.title}
                                         title={gif.title}
                                         username={gif.username}
+                                        uploadDate={gif.import_datetime}
                                         rating={gif.rating}
                                         addToCollection={() => this.props.addToCollection(gif.id, gif)}
                                         removeFromCollection={() => this.props.removeFromCollection(gif.id)}

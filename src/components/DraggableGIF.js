@@ -18,6 +18,7 @@ const Result = props => props.connectDragSource(
         title={props.title}
         username={props.username}
         rating={props.rating}
+        uploadDate={props.import_datetime}
         collectionId={props.collection}
         addToCollection={props.addToCollection}
         removeFromCollection={props.removeFromCollection}

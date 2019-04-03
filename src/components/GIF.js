@@ -20,10 +20,15 @@ const Button = styled.button`
 `
 
 const Div = styled.div`
+    margin: ${gutter}px;
     padding: ${gutter/2}px;
     border: ${props => props.rating !== 'g' && props.rating !== undefined ? '2px solid red' : '' };
+    background: white;
+    max-height: 80%;
+    text-align: center;
     &:hover{
         transform: scale(1.2);
+        box-shadow: 1px -1px 20px ${EazeBlue};
     }
     @media(max-width: ${mediumScreen}px){
         width: 50%;
@@ -94,12 +99,14 @@ class GIF extends Component {
     render() {
         return (
             <Div key={this.props.id} rating={this.props.rating}>
-                <img
-                    src={this.props.url}
-                    alt={this.props.alt}
-                    title={this.props.title}
-                    onClick={this.props.toggleModal || this.toggleModal}
-                />
+                <div onClick={this.props.toggleModal || this.toggleModal}>
+                    <img
+                        src={this.props.url}
+                        alt={this.props.alt}
+                        title={this.props.title}
+                    />
+                    <h4 style={{ padding: `${gutter/2}px` }}>{this.props.title}</h4>
+                </div>
                 {/* Modal */}
                 <StyledModal
                     isOpen={this.state.isOpen || this.props.isOpen}
@@ -120,7 +127,9 @@ class GIF extends Component {
                         alt={this.props.alt}
                         title={this.props.title}
                     />
+                    <h5>GIF Rating: {this.props.rating !== '' && this.props.rating !== undefined ? this.props.rating.toUpperCase() : 'Not Rated'}</h5>
                     <h5>Uploaded by: {this.props.username !== '' ? this.props.username : 'Unknown User'}</h5>
+                    <h5>Uploaded on: {this.props.uploadDate !== '' && this.props.uploadDate !== undefined ? this.props.uploadDate.slice(0,10) : 'Unknown'}</h5>
                     <div>
                         {this.state.collection.includes(this.props.id) ? 
                             <Button

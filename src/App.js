@@ -153,7 +153,6 @@ class App extends Component {
     let { collection, collectionId } = this.state;
     for ( let i = 0, len = localStorage.length; i < len; i++ ){
       let key = String(localStorage.key(i));
-      console.log(key)
       if ( !key.includes(namespace) ){
         break;
       }
@@ -198,27 +197,27 @@ class App extends Component {
   }
   // "Turns the page"
   offset = e => {
-  e.preventDefault();
-  if ( e.target.name === 'next' ) {
-      // increases offset by 25 to view the next 25 results
-      // increments page by 1
-      this.setState({ offset: this.state.offset + offset, page: this.state.page + 1 }, () => {
-          if ( this.state.query.length > 1) {
-              this.search();
-          } else {
-              this.initialize()
-          }
-      });
-  } else if ( e.target.name === 'previous' && this.state.offset >= 25 ) {
-      // decreases offset by 25 to view the previous 25 results
-      // decrements page by 1
-      this.setState({ offset: this.state.offset - offset, page: this.state.page - 1 }, () => {
-          if ( this.state.query.length > 1) {
-              this.search();
-          } else {
-              this.initialize()
-          }
-      });
+    e.preventDefault();
+    if ( e.target.name === 'next' ) {
+        // increases offset by 25 to view the next 25 results
+        // increments page by 1
+        this.setState({ offset: this.state.offset + offset, page: this.state.page + 1 }, () => {
+            if ( this.state.query.length > 1) {
+                this.search();
+            } else {
+                this.initialize()
+            }
+        });
+    } else if ( e.target.name === 'previous' && this.state.offset >= 25 ) {
+        // decreases offset by 25 to view the previous 25 results
+        // decrements page by 1
+        this.setState({ offset: this.state.offset - offset, page: this.state.page - 1 }, () => {
+            if ( this.state.query.length > 1) {
+                this.search();
+            } else {
+                this.initialize()
+            }
+        });
     }
   }
   // Return random GIF/Sticker, this.state.query acts as tags
@@ -299,6 +298,7 @@ class App extends Component {
     }
   }
   render() {
+    console.log(this.state.collection)
     // will only return Rated G GIFs if NSFW is false
     let results = this.state.nsfw === true ? 
                   this.state.results : 
@@ -310,7 +310,7 @@ class App extends Component {
         <ModalProvider>
           {/* Navbar */}
           <AppHeader>
-            <h1 style={{ fontSize: '5rem', color: 'white' }} >eaze</h1>
+            <span style={{ fontFamily: 'Vibur', fontSize: '5rem', color: 'white' }} >eaze</span>
             <SearchBar 
               query={this.state.query}
               handleChange={this.handleChange}
@@ -359,6 +359,8 @@ class App extends Component {
                       title={this.state.random[0]['title']}
                       alt={this.state.random[0]['title']}
                       username={this.state.random[0]['username']}
+                      rating={this.state.random[0]['rating']}
+                      uploadDate={this.state.random[0]['import_datetime']}
                       isOpen={true}
                       collectionId={this.state.collectionId}
                       addToCollection={() => this.addToCollection(this.state.random[0]['id'], this.state.random[0])}
