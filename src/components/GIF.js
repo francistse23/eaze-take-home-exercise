@@ -64,8 +64,12 @@ class GIF extends Component {
     };
     render() {
         return (
-            <Div key={this.props.id} rating={this.props.rating}>
-                <div onClick={this.props.toggleModal || this.toggleModal}>
+            <Div 
+                key={this.props.id}
+                rating={this.props.rating}
+                onClick={this.props.toggleModal || this.toggleModal}
+            >
+                <div>
                     <img
                         src={this.props.url}
                         alt={this.props.alt}
