@@ -20,14 +20,14 @@ const Button = styled.button`
 `
 
 const Div = styled.div`
-    margin: ${gutter}px;
+    margin: ${gutter/2}px;
     padding: ${gutter/2}px;
     border: ${props => props.rating !== 'g' && props.rating !== undefined ? '2px solid red' : '' };
     background: white;
-    max-height: 80%;
+    max-height: 90%;
     text-align: center;
     &:hover{
-        transform: scale(1.2);
+        transform: scale(1.1);
         box-shadow: 1px -1px 20px ${EazeBlue};
     }
     @media(max-width: ${mediumScreen}px){

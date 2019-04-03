@@ -40,6 +40,7 @@ const AppHeader = styled.header`
 const Button = styled.button`
   cursor: pointer;
   padding: ${gutter/2}px ${gutter}px;
+  font-family: Roboto Slab;
   font-weight: 650;
   font-size: 1rem;
   border-radius: 10px;
