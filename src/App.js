@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-// import { Route } from 'react-router-dom';
+import { Route, Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
-import { ModalProvider } from 'styled-react-modal';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import debounce from 'lodash/debounce';
 
-import { maxAppWidth, smallScreen, mediumScreen, largeScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
+import { maxAppWidth, smallScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
 import { SearchBar } from './components/SearchBar';
-import { DraggableGIF } from './components/DraggableGIF';
-import GIF, { StyledModal } from './components/GIF';
+import Home from './components/Home';
 import GIFCollection from './components/GIFCollection';
 
 const AppPageContainer = styled.section`
@@ -55,65 +53,65 @@ const Button = styled.button`
   }
 `;
 
-const Footer = styled.footer`
-  position: fixed;
-  bottom: 0;
-  display: flex; 
-  justify-content: space-around;
-  width: 100%;
-  padding: ${gutter}px;
-  margin-top: ${gutter*2}px;
-  border-top: 2px solid ${EazeGold};
-  color: ${EazeBlue};
-  background: ${EazeGold};
-`;
+// const Footer = styled.footer`
+//   position: fixed;
+//   bottom: 0;
+//   display: flex; 
+//   justify-content: space-around;
+//   width: 100%;
+//   padding: ${gutter}px;
+//   margin-top: ${gutter*2}px;
+//   border-top: 2px solid ${EazeGold};
+//   color: ${EazeBlue};
+//   background: ${EazeGold};
+// `;
 
-const GIFs = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: 15%;
-  max-width: ${maxAppWidth*1.5}px;
-  @media(max-width: ${largeScreen}px){
-    margin-left: 10%;
-    margin-right: 20%;
-  }
-  @media(max-width: ${mediumScreen}px ){
-    margin-left: 1%;
-    width: 60%;
-  }
-  @media(max-width: ${smallScreen}px ){
-    margin-left: 0;
-  }
-`;
+// const GIFs = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   margin-left: 15%;
+//   max-width: ${maxAppWidth*1.5}px;
+//   @media(max-width: ${largeScreen}px){
+//     margin-left: 10%;
+//     margin-right: 20%;
+//   }
+//   @media(max-width: ${mediumScreen}px ){
+//     margin-left: 1%;
+//     width: 60%;
+//   }
+//   @media(max-width: ${smallScreen}px ){
+//     margin-left: 0;
+//   }
+// `;
 
-const Page = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: ${gutter*15}px ${gutter}px;
-  background-color: #333;
-  color: ${EazeBlue};
-  @media (max-width: ${mediumScreen}px) {
-    padding: ${gutter}px;
-    margin: 0;
-  }
-  @media (max-width: ${smallScreen}px) {
-    padding: ${gutter}px;
-  }
-`;
+// const Page = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   padding: ${gutter*15}px ${gutter}px;
+//   background-color: #333;
+//   color: ${EazeBlue};
+//   @media (max-width: ${mediumScreen}px) {
+//     padding: ${gutter}px;
+//     margin: 0;
+//   }
+//   @media (max-width: ${smallScreen}px) {
+//     padding: ${gutter}px;
+//   }
+// `;
 
-const PageContent = styled.div`
-  display: flex;
-`;
+// const PageContent = styled.div`
+//   display: flex;
+// `;
 
-const PageHeader = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin: ${gutter}px;
-  padding: ${gutter*2}px;
-  @media(max-width: ${smallScreen}px){
-    flex-direction: column;
-  }
-`;
+// const PageHeader = styled.div`
+//   display: flex;
+//   justify-content: space-around;
+//   margin: ${gutter}px;
+//   padding: ${gutter*2}px;
+//   @media(max-width: ${smallScreen}px){
+//     flex-direction: column;
+//   }
+// `;
 
 // sets key to env var if there's one. if not, set the key to GIPHY's public beta key
 const key = process.env.REACT_APP_API_KEY || 'dc6zaTOxFJmzC';
@@ -164,7 +162,7 @@ class App extends Component {
         }
       }
     }
-    this.setState(() => ({ collection, collectionId }));
+    this.setState({ collection, collectionId });
   }
   // clears collection
   clearCollection = () => {
@@ -304,15 +302,9 @@ class App extends Component {
     // shows how many GIFs were not shown because they are not rated G
     let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
     return (
-      // <Route exact path='/collection' render={(props) => <GIFCollection {...props}
-      //   paused={this.state.paused}
-      //   collection={this.state.collection}
-      //   collectionId={this.state.collectionId}
-      //   addToCollection={this.addToCollection}
-      //   removeFromCollection={this.removeFromCollection}
-      // /> } />
       <AppPageContainer>
-        <ModalProvider>
+  
+
           {/* Navbar */}
           <AppHeader>
             <span style={{ fontFamily: 'Vibur', fontSize: '5rem', color: 'white' }}>
@@ -327,108 +319,45 @@ class App extends Component {
               toggle={this.toggle}
               paused={this.state.paused}
             />
+            <Link to='/collection'><Button>View Collection</Button></Link>
           </AppHeader>
 
-          {/* Content */}
-          <Page>
+          <Route exact path='/' render={(props) => <Home {...props}
+              collection={this.state.collection}
+              collectionId={this.state.collectionId}
+              confirmModal={this.state.confirmModal}
+              nsfw={this.state.nsfw}
+              offset={this.offset}
+              omitted={omitted}
+              paused={this.state.paused}
+              page={this.state.page}
+              random={this.state.random}
+              results={results}
+              query={this.state.query}
+              total={this.state.total}
+              type={this.state.type}
+              // functions
+              addToCollection={this.addToCollection}
+              clearCollection={this.clearCollection}
+              randomize={this.randomize}
+              removeFromCollection={this.removeFromCollection}
+              toggle={this.toggle}
+              toggleModal={this.toggleModal}
+            /> } 
+          />
+          {/* <Route exact path='/collection' render={(props) => <GIFCollection {...props}
+            paused={this.state.paused}
+            collection={this.state.collection}
+            collectionId={this.state.collectionId}
+            addToCollection={this.addToCollection}
+            removeFromCollection={this.removeFromCollection}
+          /> } /> */}
+          
 
-            {/* Page's header */}
-            <PageHeader>
-              <h2 style={{ fontFamily: 'Megrim' }}>
-                {`${this.state.query === "" ? "Trending" : `"${this.state.query}"` } 
-                ${this.state.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} 
-                ${this.state.type === 'gifs' ? 'GIFs' : 'Stickers'}
-                ${!this.state.nsfw && omitted > 0 ? `, ${omitted.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${this.state.type === 'gifs' ? 'GIFs' : 'Stickers' } omitted on this page` : '' }`}
-              </h2>
-
-              {/* Randomizer */}
-              <Button onClick={this.randomize}>Surprise Me :)</Button>
-
-            
-              {/* Clear Collection */}
-              {this.state.collection.length > 0 ? 
-                <Button name='confirmModal' style={{ background: 'red', color: 'white' }} onClick={this.toggle}>
-                  Clear Collection!
-                </Button> : ''
-              }
-
-              {this.state.confirmModal ?
-                <StyledModal isOpen={this.state.confirmModal}>
-                  <h1 style={{ padding: `${gutter*2}px` }}>
-                    Are you sure you want to delete your collection? There's no turning back!
-                  </h1>
-                  <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <Button 
-                      onClick={this.clearCollection}
-                      style={{ background: 'red', color: 'white', padding: `${gutter}px` }}
-                    >
-                      Yup!
-                    </Button>
-                    <Button name='confirmModal' onClick={this.toggle}>I Changed My Mind!</Button>
-                  </div>
-                </StyledModal> : ''
-              }
-            </PageHeader>
-            
-            <PageContent>
-
-              <GIFs>
-                {/*  render random GIF if there's one */}
-                {this.state.random.length === 0 ? '' :
-                    <GIF 
-                      key={this.state.random[0]['id']}
-                      id={this.state.random[0]['id']}
-                      url={this.state.random[0]['images'][`${this.state.paused ? 'fixed_width_still' : 'fixed_width_downsampled'}`]['url']}
-                      HDurl={this.state.random[0]['images']['original']['url']}
-                      title={this.state.random[0]['title']}
-                      alt={this.state.random[0]['title']}
-                      username={this.state.random[0]['username']}
-                      rating={this.state.random[0]['rating']}
-                      uploadDate={this.state.random[0]['import_datetime']}
-                      isOpen={true}
-                      collectionId={this.state.collectionId}
-                      addToCollection={() => this.addToCollection(this.state.random[0]['id'], this.state.random[0])}
-                      removeFromCollection={() => this.removeFromCollection(this.state.random[0]['id'])}
-                      randomize={this.randomize}
-                      toggleModal={this.toggleModal}
-                    />
-                }
-
-                {/* renders the trending/searched GIFs/Stickers */}
-                {results.map( result => (
-                  <DraggableGIF 
-                    key={result.id}
-                    {...result}
-                    paused={this.state.paused}
-                    collectionId={this.state.collectionId}
-                    addToCollection={() => this.addToCollection(result.id, {...result})}
-                    removeFromCollection={() => this.removeFromCollection(result.id)}
-                    randomize={this.randomize}
-                  />
-                ))}
-
-                {/* Area to drop GIFs */}
-                <GIFCollection 
-                  paused={this.state.paused}
-                  collection={this.state.collection}
-                  collectionId={this.state.collectionId}
-                  addToCollection={this.addToCollection}
-                  removeFromCollection={this.removeFromCollection}
-                />
-              </GIFs>
-            </PageContent>
-          </Page>
-
-          <Footer>
-            <Button name='previous' onClick={this.offset}>Previous</Button>
-            <h2>{this.state.page}</h2>
-            <Button name='next' onClick={this.offset}>Next</Button>
-          </Footer>
-
-        </ModalProvider>
+      
       </AppPageContainer>
     );
   }
 }
 
-export default DragDropContext(HTML5Backend)(App);
+export default DragDropContext(HTML5Backend)(withRouter(App));
