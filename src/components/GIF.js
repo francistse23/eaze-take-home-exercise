@@ -12,6 +12,7 @@ const Button = styled.button`
     border: 2px solid ${EazeBlue};
     background: ${EazeGold};
     color: ${EazeBlue};
+    cursor: pointer;
     &:hover{
         border: 2px solid ${EazeGold};
         background-color: ${EazeBlue};
@@ -97,26 +98,25 @@ class GIF extends Component {
                         </Button>
                     </div>
                     {/* Modal Body */}
-                    <img
-                        src={this.props.HDurl}
-                        alt={this.props.alt}
-                        title={this.props.title}
-                    />
-                    <h5>    
-                        GIF Rating: {this.props.rating !== '' && this.props.rating !== undefined ? this.props.rating.toUpperCase() : 'Not Rated'}
-                    </h5>
-                    <h5>
-                        Uploaded by: {this.props.username !== '' ? this.props.username : 'Unknown User'}
-                    </h5>
-                    <h5>
-                        Uploaded on: {this.props.uploadDate !== '' && this.props.uploadDate !== undefined ? this.props.uploadDate.slice(0,10) : 'Unknown'}
-                    </h5>
+                    <div style={{ textAlign: 'center' }}>
+                        <img
+                            src={this.props.HDurl}
+                            alt={this.props.alt}
+                            title={this.props.title}
+                        />
+                        <h4>    
+                            GIF Rating: {this.props.rating !== '' && this.props.rating !== undefined ? this.props.rating.toUpperCase() : 'Not Rated'}
+                        </h4>
+                        <h4>
+                            Uploaded by: {this.props.username !== '' ? this.props.username : 'Unknown User'}
+                        </h4>
+                        <h4>
+                            Uploaded on: {this.props.uploadDate !== '' && this.props.uploadDate !== undefined ? this.props.uploadDate.slice(0,10) : 'Unknown'}
+                        </h4>
+                    </div>
 
                     {/* Modal Footer */}
-                    <input value={this.props.HDurl} id='copyURL' style={{ display: 'none' }} />
-                    <Button onClick={() => this.props.copyURL(this.props.HDurl)}>
-                        Click to Copy URL
-                    </Button>
+                 
                     <div>
                         {this.props.collectionId.includes(this.props.id) ? 
                             <Button

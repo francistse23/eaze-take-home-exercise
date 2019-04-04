@@ -84,13 +84,6 @@ const PageHeader = styled.div`
 `;
 
 class Home extends Component {
-    // copy GIF/Sticker URL
-    copyURL = () => {
-        let url = document.getElementById('copyURL');
-        url.select();
-        document.execCommand('copy');
-        alert('URL Copied!')
-    }
     render(){
         return (
             <ModalProvider>
@@ -160,7 +153,6 @@ class Home extends Component {
                                     removeFromCollection={() => this.props.removeFromCollection(this.props.random[0]['id'])}
                                     randomize={this.props.randomize}
                                     toggleModal={this.props.toggleModal}
-                                    copyURL={this.copyURL(this.props.random[0]['images']['original']['url'])}
                                 />
                             }
                     
@@ -174,7 +166,6 @@ class Home extends Component {
                                     addToCollection={() => this.props.addToCollection(result.id, {...result})}
                                     removeFromCollection={() => this.props.removeFromCollection(result.id)}
                                     randomize={this.props.randomize}
-                                    copyURL={() => this.copyURL(result.images.original.url)}
                                 />
                             ))}
                                 
@@ -186,7 +177,6 @@ class Home extends Component {
                                 randomize={this.props.randomize}
                                 addToCollection={this.props.addToCollection}
                                 removeFromCollection={this.props.removeFromCollection}
-                                copyURL={() => this.copyURL()}
                             />
                         </GIFs>
                     </PageContent>

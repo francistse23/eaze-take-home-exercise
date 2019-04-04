@@ -139,7 +139,6 @@ class GIFCollection extends Component {
                                         rating={gif.rating}
                                         collectionId={this.props.collectionId}
                                         randomize={this.props.randomize}
-                                        copyURL={() => this.props.copyURL(gif.images.original.url)}
                                         addToCollection={() => this.props.addToCollection(gif.id, gif)}
                                         removeFromCollection={() => this.props.removeFromCollection(gif.id)}
                                     />                          
