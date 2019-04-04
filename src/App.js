@@ -318,10 +318,13 @@ class App extends Component {
 
           <Route exact path='/collection' render={(props) => <GIFCollection {...props}
             paused={this.state.paused}
+            random={this.state.random}
             collection={this.state.collection}
             collectionId={this.state.collectionId}
             addToCollection={this.addToCollection}
             removeFromCollection={this.removeFromCollection}
+            randomize={this.randomize}
+            toggleModal={this.toggleModal}
           /> } />
 
         </ModalProvider>

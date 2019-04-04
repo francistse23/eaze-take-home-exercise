@@ -58,6 +58,7 @@ const Collection = styled.div`
 `;
 
 const ViewCollection = styled.div`
+    display: flex;
     max-width: ${maxAppWidth};
     margin-top: 10rem;
 `;
@@ -157,7 +158,7 @@ class GIFCollection extends Component {
                 )}
             </Container> : 
             <ViewCollection rating={this.props.rating}>
-                <h3 style={{ fontFamily: 'Megrim' }}>Here's Your Awesome Collection of GIFs/Stickers :)</h3>
+                <h3 style={{ fontFamily: 'Megrim', color: 'white' }}>Here's Your Awesome Collection of GIFs/Stickers :)</h3>
                 <Collection>
                     {collection.length > 0 ? 
                         collection.map( gif => (                              
@@ -179,6 +180,27 @@ class GIFCollection extends Component {
                             />                          
                         )) : 'Oh no, your collection is empty :/'
                     }
+
+                    {/*  render random GIF if there's one */}
+                      {this.props.random.length === 0 ? '' :
+                            <GIF 
+                                key={this.props.random[0]['id']}
+                                id={this.props.random[0]['id']}
+                                url={this.props.random[0]['images'][`${this.props.paused ? 'fixed_width_still' : 'fixed_width_downsampled'}`]['url']}
+                                HDurl={this.props.random[0]['images']['original']['url']}
+                                title={this.props.random[0]['title']}
+                                alt={this.props.random[0]['title']}
+                                username={this.props.random[0]['username']}
+                                rating={this.props.random[0]['rating']}
+                                uploadDate={this.props.random[0]['import_datetime']}
+                                isOpen={true}
+                                collectionId={this.props.collectionId}
+                                addToCollection={() => this.props.addToCollection(this.props.random[0]['id'], this.props.random[0])}
+                                removeFromCollection={() => this.props.removeFromCollection(this.props.random[0]['id'])}
+                                randomize={this.props.randomize}
+                                toggleModal={this.props.toggleModal}
+                            />
+                        }
                 </Collection>
             </ViewCollection>
         )
