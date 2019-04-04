@@ -74,6 +74,7 @@ class App extends Component {
       query: '',
       random: [],
       results: [],
+      sort: 'Descending',
       total: 0,
       type: 'gifs',
     }
@@ -85,6 +86,15 @@ class App extends Component {
     collection.push(gif);
     collectionId.push(id);
     this.setState({ collection, collectionId}, () => this.collection());
+  }
+  // clears collection
+  clearCollection = () => {
+    localStorage.clear();
+    this.setState({ 
+      collection: [],
+      collectionId: [],
+      confirmModal: false
+    });
   }
   // renders collection saved in localStorage
   collection = () => {
@@ -104,15 +114,7 @@ class App extends Component {
     }
     this.setState({ collection, collectionId });
   }
-  // clears collection
-  clearCollection = () => {
-    localStorage.clear();
-    this.setState({ 
-      collection: [],
-      collectionId: [],
-      confirmModal: false
-    });
-  }
+
   // handles change in search input
   handleChange = e => {
     this.setState({ 
@@ -205,6 +207,17 @@ class App extends Component {
   }
   // debounce search function
   debouncedSearch = debounce(this.search, 500);
+  sortResults = results => {
+    if (this.state.sort === 'Descending'){
+      results.sort((a,b) => {
+        return new Date(b.import_datetime) - new Date(a.import_datetime);
+      })
+    } else {
+      results.sort((a,b) => {
+        return new Date(a.import_datetime) - new Date(b.import_datetime);
+      })
+    }
+  }
   // enable/disable NSFW content && toggle to show either GIFs or stickers
   toggle = e => {
     if (e.target.name === 'nsfw'){
@@ -219,6 +232,12 @@ class App extends Component {
       this.setState({ paused: !this.state.paused });
     } else if ( e.target.name === 'confirmModal' ){
       this.setState({ confirmModal: !this.state.confirmModal });
+    } else if ( e.target.name === 'sort' ){
+      if ( this.state.sort === 'Descending' ){
+        this.setState({ sort: 'Ascending' });
+      } else {
+        this.setState({ sort: 'Descending' });
+      }
     }
   }
   // Modal toggle
@@ -239,6 +258,8 @@ class App extends Component {
     let results = this.state.nsfw === true ? 
                   this.state.results : 
                   this.state.results.filter( gif => gif.rating === 'g' ); 
+    // sorts results, sorted by descending upload date by default
+    this.sortResults(results);
     // shows how many GIFs were not shown because they are not rated G
     let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
     return (
@@ -246,9 +267,16 @@ class App extends Component {
 
           {/* Navbar */}
           <AppHeader>
-            <span style={{ fontFamily: 'Vibur', fontSize: '5rem', color: 'white' }}>
-              eaze
-            </span>
+            <Link to="/" 
+                  style={{ 
+                    textDecoration: 'none',
+                    fontFamily: 'Vibur',
+                    fontSize: '5rem',
+                    color: 'white' 
+                  }}
+            >
+                eaze
+            </Link>
             <SearchBar 
               query={this.state.query}
               handleChange={this.handleChange}
@@ -270,9 +298,10 @@ class App extends Component {
               omitted={omitted}
               paused={this.state.paused}
               page={this.state.page}
+              query={this.state.query}
               random={this.state.random}
               results={results}
-              query={this.state.query}
+              sort={this.state.sort}
               total={this.state.total}
               type={this.state.type}
               // functions

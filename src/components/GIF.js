@@ -96,14 +96,27 @@ class GIF extends Component {
                             X
                         </Button>
                     </div>
+                    {/* Modal Body */}
                     <img
                         src={this.props.HDurl}
                         alt={this.props.alt}
                         title={this.props.title}
                     />
-                    <h5>GIF Rating: {this.props.rating !== '' && this.props.rating !== undefined ? this.props.rating.toUpperCase() : 'Not Rated'}</h5>
-                    <h5>Uploaded by: {this.props.username !== '' ? this.props.username : 'Unknown User'}</h5>
-                    <h5>Uploaded on: {this.props.uploadDate !== '' && this.props.uploadDate !== undefined ? this.props.uploadDate.slice(0,10) : 'Unknown'}</h5>
+                    <h5>    
+                        GIF Rating: {this.props.rating !== '' && this.props.rating !== undefined ? this.props.rating.toUpperCase() : 'Not Rated'}
+                    </h5>
+                    <h5>
+                        Uploaded by: {this.props.username !== '' ? this.props.username : 'Unknown User'}
+                    </h5>
+                    <h5>
+                        Uploaded on: {this.props.uploadDate !== '' && this.props.uploadDate !== undefined ? this.props.uploadDate.slice(0,10) : 'Unknown'}
+                    </h5>
+
+                    {/* Modal Footer */}
+                    <input value={this.props.HDurl} id='copyURL' style={{ display: 'none' }} />
+                    <Button onClick={() => this.props.copyURL(this.props.HDurl)}>
+                        Click to Copy URL
+                    </Button>
                     <div>
                         {this.props.collectionId.includes(this.props.id) ? 
                             <Button

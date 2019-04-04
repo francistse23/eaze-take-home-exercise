@@ -132,7 +132,6 @@ class GIFCollection extends Component {
                                         key={gif.id}
                                         id={gif.id}
                                         url={this.props.paused ? gif.images.fixed_width_still.url : gif.images.fixed_width_downsampled.url}
-                                        HDurl={gif.images.original.url}
                                         alt={gif.title}
                                         title={gif.title}
                                         username={gif.username}
@@ -140,6 +139,7 @@ class GIFCollection extends Component {
                                         rating={gif.rating}
                                         collectionId={this.props.collectionId}
                                         randomize={this.props.randomize}
+                                        copyURL={() => this.props.copyURL(gif.images.original.url)}
                                         addToCollection={() => this.props.addToCollection(gif.id, gif)}
                                         removeFromCollection={() => this.props.removeFromCollection(gif.id)}
                                     />                          

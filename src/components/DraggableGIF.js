@@ -8,7 +8,7 @@ const DndTypes = {
 };
 
 const Result = props => props.connectDragSource(
-    <span>
+    <div>
       <GIF 
         key={props.id}
         id={props.id}
@@ -24,8 +24,9 @@ const Result = props => props.connectDragSource(
         addToCollection={props.addToCollection}
         removeFromCollection={props.removeFromCollection}
         randomize={props.randomize}
+        copyURL={() => props.copyURL(props.images.original.url)}
       />
-    </span>
+    </div>
 );
   
 export const DraggableGIF = DragSource(
