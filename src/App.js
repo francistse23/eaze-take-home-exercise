@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
+import { ModalProvider } from 'styled-react-modal';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import debounce from 'lodash/debounce';
@@ -9,7 +10,7 @@ import debounce from 'lodash/debounce';
 import { maxAppWidth, smallScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
 import { SearchBar } from './components/SearchBar';
 import Home from './components/Home';
-// import GIFCollection from './components/GIFCollection';
+import GIFCollection from './components/GIFCollection';
 
 const AppPageContainer = styled.section`
   display: flex;
@@ -264,6 +265,7 @@ class App extends Component {
     let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
     return (
       <AppPageContainer>
+        <ModalProvider>
 
           {/* Navbar */}
           <AppHeader>
@@ -272,7 +274,7 @@ class App extends Component {
                     textDecoration: 'none',
                     fontFamily: 'Vibur',
                     fontSize: '5rem',
-                    color: 'white' 
+                    color: 'white',
                   }}
             >
                 eaze
@@ -314,13 +316,15 @@ class App extends Component {
             /> } 
           />
 
-          {/* <Route exact path='/collection' render={(props) => <GIFCollection {...props}
+          <Route exact path='/collection' render={(props) => <GIFCollection {...props}
             paused={this.state.paused}
             collection={this.state.collection}
             collectionId={this.state.collectionId}
             addToCollection={this.addToCollection}
             removeFromCollection={this.removeFromCollection}
-          /> } /> */}
+          /> } />
+
+        </ModalProvider>
 
       </AppPageContainer>
     );

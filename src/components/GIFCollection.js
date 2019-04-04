@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { withRouter } from 'react-router-dom';
 import { DropTarget } from 'react-dnd';
 import { EazeBlue, EazeGold, maxAppWidth, gutter, smallScreen, mediumScreen, largeScreen, xLargeScreen } from '../lib/constants';
 import { DraggableGIF } from './DraggableGIF';
+import GIF from './GIF';
 import { namespace } from '../lib/constants';
 
 const Container = styled.div`
@@ -53,6 +55,11 @@ const Collection = styled.div`
     flex-direction: column;
     min-width: ${maxAppWidth/8};
     color: ${EazeGold};
+`;
+
+const ViewCollection = styled.div`
+    max-width: ${maxAppWidth};
+    margin-top: 10rem;
 `;
 
 const TargetDropzone = DropTarget (
@@ -120,6 +127,7 @@ class GIFCollection extends Component {
     render() {
         const { collection, canDrop, isOver, connectDropTarget } = this.props;  
         return (
+            this.props.match.path === '/' ? 
             <Container canDrop={canDrop} isOver={isOver} rating={this.props.rating}>
                 {connectDropTarget (
                     <div>
@@ -147,9 +155,34 @@ class GIFCollection extends Component {
                         </Collection>
                     </div>
                 )}
-            </Container>
+            </Container> : 
+            <ViewCollection rating={this.props.rating}>
+                <h3 style={{ fontFamily: 'Megrim' }}>Here's Your Awesome Collection of GIFs/Stickers :)</h3>
+                <Collection>
+                    {collection.length > 0 ? 
+                        collection.map( gif => (                              
+                            <GIF
+                                {...gif}
+                                key={gif.id}
+                                id={gif.id}
+                                url={this.props.paused ? gif.images.fixed_width_still.url : gif.images.fixed_width_downsampled.url}
+                                HDurl={gif.images.original.url}
+                                alt={gif.title}
+                                title={gif.title}
+                                username={gif.username}
+                                uploadDate={gif.import_datetime}
+                                rating={gif.rating}
+                                collectionId={this.props.collectionId}
+                                randomize={this.props.randomize}
+                                addToCollection={() => this.props.addToCollection(gif.id, gif)}
+                                removeFromCollection={() => this.props.removeFromCollection(gif.id)}
+                            />                          
+                        )) : 'Oh no, your collection is empty :/'
+                    }
+                </Collection>
+            </ViewCollection>
         )
     }
 }
 
-export default TargetDropzone(GIFCollection);
+export default TargetDropzone(withRouter(GIFCollection));

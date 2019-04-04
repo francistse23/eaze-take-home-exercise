@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { ModalProvider } from 'styled-react-modal';
 import { maxAppWidth, smallScreen, mediumScreen, largeScreen, gutter, EazeBlue, EazeGold } from '../lib/constants';
 import { DraggableGIF } from './DraggableGIF';
 import GIF, { StyledModal } from './GIF';
@@ -86,7 +85,7 @@ const PageHeader = styled.div`
 class Home extends Component {
     render(){
         return (
-            <ModalProvider>
+            <div>
 
                 {/* Content */}
                 <Page>
@@ -188,7 +187,7 @@ class Home extends Component {
                     <Button name='next' onClick={this.props.offset}>Next</Button>
                 </Footer>
         
-            </ModalProvider>
+            </div>
         )
     }
 
