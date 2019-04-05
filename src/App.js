@@ -29,12 +29,13 @@ const AppHeader = styled.header`
   align-content: center;
   border-bottom: 2px solid ${EazeGold};
   background-color: ${EazeBlue};
-  max-height: 20%;
+  max-height: 40%;
   width: 100%;
   padding: ${gutter/2}px;
 
   @media(max-width: ${smallScreen}px){
-    flex-direction: column;
+    flex-direction: column; 
+    transition: top 0.5s;
   }
 `;
 
@@ -59,10 +60,16 @@ const Button = styled.button`
 const ButtonContainer = styled.div`
   display: flex;
   margin: 2%;
+  @media(max-width: ${smallScreen}){
+    margin: 2% 0 10% 0;
+  }
 `
 
 const Logo = styled.div`
   margin: 2%;
+  @media(max-width: ${smallScreen}){
+    margin: 0;
+  }
 `;
 
 // sets key to env var if there's one. if not, set the key to GIPHY's public beta key
@@ -70,6 +77,17 @@ const key = process.env.REACT_APP_API_KEY || 'dc6zaTOxFJmzC';
 
 // Controls the offset amount in GIPHY's API
 const offset = 25;
+
+var prevScrollpos = window.pageYOffset;
+window.onscroll = function() {
+  var currentScrollPos = window.pageYOffset;
+  if (prevScrollpos > currentScrollPos) {
+    document.getElementById("navbar").style.top = "0";
+  } else {
+    document.getElementById("navbar").style.top = "-350px";
+  }
+  prevScrollpos = currentScrollPos;
+}
 
 class App extends Component {
   constructor(props){
@@ -126,7 +144,6 @@ class App extends Component {
     }
     this.setState({ collection, collectionId });
   }
-
   // handles change in search input
   handleChange = e => {
     this.setState({ 
@@ -270,7 +287,6 @@ class App extends Component {
     let results = this.state.nsfw === true ? 
                   this.state.results : 
                   this.state.results.filter( gif => gif.rating === 'g' ); 
-    console.log(this.state.random)
     // sorts results, sorted by descending upload date by default
     this.sortResults(results);
     // shows how many GIFs were not shown because they are not rated G
@@ -280,7 +296,7 @@ class App extends Component {
         <ModalProvider>
 
           {/* Navbar */}
-          <AppHeader>
+          <AppHeader id='navbar'>
             <Logo>
               <Link to="/" 
                     style={{ 
@@ -304,7 +320,7 @@ class App extends Component {
             />
             <ButtonContainer>
               <Link to='/collection'><Button>View Collection</Button></Link>
-              <Button>Upload a GIF!</Button>
+              <Button name='upload' onClick={this.toggle}>Upload a GIF!</Button>
             </ButtonContainer>
           </AppHeader>
 
@@ -332,7 +348,6 @@ class App extends Component {
               toggleModal={this.toggleModal}
             /> } 
           />
-
 
           <Route exact path='/collection' render={(props) => <GIFCollection {...props}
               paused={this.state.paused}

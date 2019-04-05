@@ -8,7 +8,7 @@ const DndTypes = {
 };
 
 const Result = props => props.connectDragSource(
-    <div>
+    <div style={{ margin: '0 auto'}}>
       <GIF 
         key={props.id}
         id={props.id}

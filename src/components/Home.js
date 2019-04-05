@@ -7,6 +7,7 @@ import GIFCollection from './GIFCollection';
 
 const Button = styled.button`
   cursor: pointer;
+  margin: ${gutter/2}px;
   padding: ${gutter/2}px ${gutter}px;
   font-family: Roboto Slab;
   font-weight: 650;
@@ -49,7 +50,7 @@ const GIFs = styled.div`
     width: 60%;
   }
   @media(max-width: ${smallScreen}px ){
-    margin-left: 0;
+    margin: 0 auto;
   }
 `;
 
@@ -57,7 +58,6 @@ const Page = styled.div`
   display: flex;
   flex-direction: column;
   justfiy-content: space-between;
-  align-content: space-between;
   padding: ${gutter*15}px ${gutter}px;
   background-color: #333;
   color: ${EazeBlue};
@@ -70,7 +70,7 @@ const Page = styled.div`
     margin: 0;
   }
   @media (max-width: ${smallScreen}px) {
-    margin-top: ${gutter*18}px;
+    margin: ${gutter*18}px auto 0 auto;
     padding: ${gutter*2}px;
   }
 `;
@@ -83,9 +83,9 @@ const PageContent = styled.div`
 
 const PageHeader = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin: ${gutter}px;
-  padding: ${gutter*2}px;
+  padding: ${gutter}px;
   @media(max-width: ${smallScreen}px){
     flex-direction: column;
   }
@@ -118,7 +118,11 @@ class Home extends Component {
                 
                         {/* Clear Collection */}
                         {this.props.collection.length > 0 ? 
-                            <Button name='confirmModal' style={{ background: 'red', color: 'white' }} onClick={this.props.toggle}>
+                            <Button 
+                              name='confirmModal'
+                              style={{ background: 'red', color: 'white' }}
+                              onClick={this.props.toggle}
+                            >
                                 Clear Collection!
                             </Button> : ''
                         }

@@ -14,7 +14,7 @@ const Container = styled.div`
     top: 25%;
     padding: ${gutter/2}px;
     max-width: ${maxAppWidth/4}px;
-    max-height: ${maxAppWidth/4}px;
+    max-height: ${maxAppWidth/3}px;
     background: ${props => (props.isOver ? EazeGold : EazeBlue)};
     border: 2px solid ${props => props.isOver ? 'white' : EazeGold};
     border-radius: 10px;
@@ -31,7 +31,7 @@ const Container = styled.div`
         right: 10%;
         top: 30%;
         max-width: ${maxAppWidth/5}px;
-        max-height: ${maxAppWidth/5}px;
+        max-height: ${maxAppWidth/3}px;
     }
     @media(max-width: ${largeScreen}px){
         right: 2.5%;
@@ -39,13 +39,10 @@ const Container = styled.div`
     @media(max-width: ${mediumScreen}px){
         right: 1%;
         max-width: ${maxAppWidth/6}px;
-        max-height: ${maxAppWidth/6}px;
+        max-height: ${maxAppWidth/4}px;
     }
     @media(max-width: ${smallScreen}px){
-        right: 0;
-        top: 60%;
-        max-width: ${maxAppWidth/8}px;
-        max-height: ${maxAppWidth/6}px;
+        display: none;
     }
 `;
 

@@ -39,6 +39,16 @@ const Div = styled.div`
     }
     @media(max-width: ${smallScreen}px){
         width: 100%;
+        margin: 1% 0;
+    }
+`;
+
+const ModalHeader = styled.div`
+    display: flex;
+    justify-content: space-between; 
+    padding-bottom: ${gutter}px; 
+    @media(max-width: ${smallScreen}){
+        max-width: '300px' 
     }
 `;
 
@@ -89,14 +99,14 @@ class GIF extends Component {
                     onEscapeKeydown={this.props.toggleModal || this.toggleModal}
                 >
                     {/* Modal Header */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: `${gutter}px` }}>
+                    <ModalHeader>
                         <h3>{this.props.title !== '' ? this.props.title : 'No Title'}</h3>
                         <Button 
                             onClick={this.props.toggleModal || this.toggleModal}
                         >
                             X
                         </Button>
-                    </div>
+                    </ModalHeader>
                     {/* Modal Body */}
                     <div style={{ textAlign: 'center' }}>
                         <img

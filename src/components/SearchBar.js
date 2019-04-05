@@ -27,7 +27,9 @@ const Search = styled.div`
     padding: ${gutter}px;
     width: 100%;
     @media(max-width: ${smallScreen}px){
+        flex-direction: column;
         margin-bottom: ${gutter*2}px;
+        padding: 0;
     }
 `;
 
@@ -39,10 +41,9 @@ const SearchDiv = styled.div`
         width: 75%;
     }
     @media(max-width: ${smallScreen}px){
-        width: 65%;
+        width: 100%;
     }
 `;
-
 
 const SearchIcon = styled.img`
     cursor: pointer;
@@ -56,7 +57,7 @@ const SearchIcon = styled.img`
         width: 7.5%;
     }
     @media(max-width: ${smallScreen}px){
-        width: 10%;
+        width: 8%;
     }
 `;
 
@@ -86,7 +87,7 @@ const ToggleDiv = styled.div`
     justify-content: space-around;
     width: 20%;
     @media(max-width: ${smallScreen}px){
-        width: 30%;
+        width: 100%;
     }
 `;
 
