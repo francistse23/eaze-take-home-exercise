@@ -27,7 +27,7 @@ const Div = styled.div`
     border-radius: 5px;
     background: white;
     max-width: 300px;
-    max-height: 90%;
+    min-height: 90%;
     text-align: center;
     &:hover{
         cursor: pointer;
@@ -80,7 +80,7 @@ class GIF extends Component {
                         alt={this.props.alt}
                         title={this.props.title}
                     />
-                    <h4 style={{ padding: `${gutter/2}px` }}>{this.props.title}</h4>
+                    <h4 style={{ padding: `${gutter/2}px` }}>{this.props.title !== '' ? this.props.title : 'No Title'}</h4>
                 </div>
                 {/* Modal */}
                 <StyledModal
@@ -105,7 +105,7 @@ class GIF extends Component {
                             title={this.props.title}
                         />
                         <h4>    
-                            GIF Rating: {this.props.rating !== '' && this.props.rating !== undefined ? this.props.rating.toUpperCase() : 'Not Rated'}
+                            Rating: {this.props.rating !== '' && this.props.rating !== undefined ? this.props.rating.toUpperCase() : 'Not Rated'}
                         </h4>
                         <h4>
                             Uploaded by: {this.props.username !== '' ? this.props.username : 'Unknown User'}

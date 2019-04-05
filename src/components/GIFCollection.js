@@ -37,14 +37,13 @@ const Container = styled.div`
         right: 2.5%;
     }
     @media(max-width: ${mediumScreen}px){
-        top: 30%;
         right: 1%;
         max-width: ${maxAppWidth/6}px;
         max-height: ${maxAppWidth/6}px;
     }
     @media(max-width: ${smallScreen}px){
         right: 0;
-        top: 40%;
+        top: 60%;
         max-width: ${maxAppWidth/8}px;
         max-height: ${maxAppWidth/6}px;
     }
@@ -58,10 +57,26 @@ const Collection = styled.div`
 `;
 
 const ViewCollection = styled.div`
+    border: 5px solid ${EazeGold};
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    color: ${EazeBlue}
     max-width: ${maxAppWidth};
-    margin-top: 10rem;
+    margin: 15rem auto;
+    padding: ${gutter}px;
+    left: 50%;
+    @media(max-width: ${mediumScreen}){
+        margin: 30rem auto;
+    }
 `;
+
+const View = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+`
 
 const TargetDropzone = DropTarget (
     'result',
@@ -135,15 +150,16 @@ class GIFCollection extends Component {
                         <h3 style={{ fontFamily: 'Megrim' }}>Drag & Drop GIFs/Stickers here to store them in your collection :)</h3>
                         <Collection>
                             {collection.length > 0 ? 
-                                collection.map( gif => (                              
+                                collection.map( gif => (                          
                                     <DraggableGIF
                                         {...gif}
                                         key={gif.id}
                                         id={gif.id}
                                         url={this.props.paused ? gif.images.fixed_width_still.url : gif.images.fixed_width_downsampled.url}
+                                        HDurl={gif.images.original.url}
                                         alt={gif.title}
                                         title={gif.title}
-                                        username={gif.username}
+                                        username={gif.user ? gif.user.display_name : gif.username}
                                         uploadDate={gif.import_datetime}
                                         rating={gif.rating}
                                         collectionId={this.props.collectionId}
@@ -158,51 +174,56 @@ class GIFCollection extends Component {
                 )}
             </Container> : 
             <ViewCollection rating={this.props.rating}>
-                <h3 style={{ fontFamily: 'Megrim', color: 'white' }}>Here's Your Awesome Collection of GIFs/Stickers :)</h3>
-                <Collection>
-                    {collection.length > 0 ? 
-                        collection.map( gif => (                              
-                            <GIF
-                                {...gif}
-                                key={gif.id}
-                                id={gif.id}
-                                url={this.props.paused ? gif.images.fixed_width_still.url : gif.images.fixed_width_downsampled.url}
-                                HDurl={gif.images.original.url}
-                                alt={gif.title}
-                                title={gif.title}
-                                username={gif.username}
-                                uploadDate={gif.import_datetime}
-                                rating={gif.rating}
-                                collectionId={this.props.collectionId}
-                                randomize={this.props.randomize}
-                                addToCollection={() => this.props.addToCollection(gif.id, gif)}
-                                removeFromCollection={() => this.props.removeFromCollection(gif.id)}
-                            />                          
-                        )) : 'Oh no, your collection is empty :/'
-                    }
+                {connectDropTarget (
+                    <div>
+                        <h2 style={{ fontFamily: 'Megrim', color: 'white' }}>Here's your awesome collection of GIFs/Stickers :)</h2>
+                        <h2 style={{ fontFamily: 'Megrim', color: 'white' }}>You can drag GIFs/Stickers out of your collection if you dont want them anymore</h2>
+                        <View>
+                            {collection.length > 0 ? 
+                                collection.map( gif => (  
+                                    <DraggableGIF
+                                        {...gif}
+                                        key={gif.id}
+                                        id={gif.id}
+                                        url={this.props.paused ? gif.images.fixed_width_still.url : gif.images.fixed_width_downsampled.url}
+                                        HDurl={gif.images.original.url}
+                                        alt={gif.title}
+                                        title={gif.title}
+                                        username={gif.user ? gif.user.display_name : gif.username}
+                                        uploadDate={gif.import_datetime}
+                                        rating={gif.rating}
+                                        collectionId={this.props.collectionId}
+                                        randomize={this.props.randomize}
+                                        addToCollection={() => this.props.addToCollection(gif.id, gif)}
+                                        removeFromCollection={() => this.props.removeFromCollection(gif.id)}
+                                    />                                                      
+                                )) : 'Oh no, your collection is empty :/'
+                            }
 
-                    {/*  render random GIF if there's one */}
-                      {this.props.random.length === 0 ? '' :
-                            <GIF 
-                                key={this.props.random[0]['id']}
-                                id={this.props.random[0]['id']}
-                                url={this.props.random[0]['images'][`${this.props.paused ? 'fixed_width_still' : 'fixed_width_downsampled'}`]['url']}
-                                HDurl={this.props.random[0]['images']['original']['url']}
-                                title={this.props.random[0]['title']}
-                                alt={this.props.random[0]['title']}
-                                username={this.props.random[0]['username']}
-                                rating={this.props.random[0]['rating']}
-                                uploadDate={this.props.random[0]['import_datetime']}
-                                isOpen={true}
-                                collectionId={this.props.collectionId}
-                                addToCollection={() => this.props.addToCollection(this.props.random[0]['id'], this.props.random[0])}
-                                removeFromCollection={() => this.props.removeFromCollection(this.props.random[0]['id'])}
-                                randomize={this.props.randomize}
-                                toggleModal={this.props.toggleModal}
-                            />
-                        }
-                </Collection>
-            </ViewCollection>
+                            {/*  render random GIF if there's one */}
+                            {this.props.random.length === 0 ? '' :
+                                <GIF 
+                                    key={this.props.random[0]['id']}
+                                    id={this.props.random[0]['id']}
+                                    url={this.props.random[0]['images'][`${this.props.paused ? 'fixed_width_still' : 'fixed_width_downsampled'}`]['url']}
+                                    HDurl={this.props.random[0]['images']['original']['url']}
+                                    title={this.props.random[0]['title']}
+                                    alt={this.props.random[0]['title']}
+                                    username={this.props.random[0]['username']}
+                                    rating={this.props.random[0]['rating']}
+                                    uploadDate={this.props.random[0]['import_datetime']}
+                                    isOpen={true}
+                                    collectionId={this.props.collectionId}
+                                    addToCollection={() => this.props.addToCollection(this.props.random[0]['id'], this.props.random[0])}
+                                    removeFromCollection={() => this.props.removeFromCollection(this.props.random[0]['id'])}
+                                    randomize={this.props.randomize}
+                                    toggleModal={this.props.toggleModal}
+                                />
+                            }
+                        </View>
+                    </div>
+                )}
+            </ViewCollection> 
         )
     }
 }

@@ -11,7 +11,7 @@ const Button = styled.button`
     margin-right: 1%;
     cursor: pointer;
     height: 45px;
-    width: 45px;
+    width: 50px;
     border-radius: 50%;
     border: none;
 `;
@@ -20,12 +20,21 @@ const Switch = styled.input`
     opacity: 0;
     width: 0;
     height: 0;
-`;
-
+    `;
+    
 const Search = styled.div`
     display: flex;
+    padding: ${gutter}px;
+    width: 100%;
+    @media(max-width: ${smallScreen}px){
+        margin-bottom: ${gutter*2}px;
+    }
+`;
+
+const SearchDiv = styled.div`
+    display: flex;
     align-items: center;
-    width: 85%;
+    width: 80%;
     @media(max-width: ${mediumScreen}px){
         width: 75%;
     }
@@ -34,18 +43,10 @@ const Search = styled.div`
     }
 `;
 
-const SearchDiv = styled.div`
-    display: flex;
-    width: 80%;
-    @media(max-width: ${smallScreen}px){
-        margin-bottom: ${gutter*2}px;
-        width: 100%;
-    }
-`;
 
 const SearchIcon = styled.img`
     cursor: pointer;
-    width: 2.5%;
+    width: 3%;
     height: 30px;
     padding: ${gutter/4}px;
     border: 2px solid ${EazeGold};
@@ -64,9 +65,9 @@ const SearchInput = styled.input`
     margin: ${gutter}px 0;
     border-radius: 10px 0 0 10px;
     font-size: 1rem;
-    width: 90%;
+    width: 100%;
     @media(max-width: ${mediumScreen}px){
-        width: 80%;
+        width: 60%;
     }
 `;
 
@@ -83,8 +84,7 @@ const Toggle = styled.label`
 const ToggleDiv = styled.div`
     display: flex;
     justify-content: space-around;
-    width: 15%;
-    padding-left: ${gutter}px;
+    width: 20%;
     @media(max-width: ${smallScreen}px){
         width: 30%;
     }
@@ -92,8 +92,8 @@ const ToggleDiv = styled.div`
 
 export const SearchBar = props => {
     return (
-        <SearchDiv>
-            <Search>
+        <Search>
+            <SearchDiv>
                 <Button 
                     name='paused'
                     title={`${props.paused ? 'play' : 'pause' } animation`}
@@ -113,7 +113,7 @@ export const SearchBar = props => {
                     alt='search'
                     onClick={props.search}
                 />
-            </Search>
+            </SearchDiv>
             {/* Switches to toggle NSFW and GIF/Sticker */}
             <ToggleDiv>
                 <Toggle>
@@ -140,8 +140,7 @@ export const SearchBar = props => {
                         {props.type === 'gifs' ? 'GIFs' : 'Stickers'}
                     </h3>
                 </Toggle>
-           
             </ToggleDiv>
-        </SearchDiv>
+        </Search>
     )
 };

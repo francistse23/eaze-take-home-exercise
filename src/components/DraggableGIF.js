@@ -17,7 +17,7 @@ const Result = props => props.connectDragSource(
         HDurl={props.images.original.url}
         alt={props.title}
         title={props.title}
-        username={props.username}
+        username={props.user ? props.user.display_name : props.username}
         rating={props.rating}
         uploadDate={props.import_datetime}
         collectionId={props.collectionId}

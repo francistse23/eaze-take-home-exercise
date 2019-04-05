@@ -56,20 +56,29 @@ const GIFs = styled.div`
 const Page = styled.div`
   display: flex;
   flex-direction: column;
+  justfiy-content: space-between;
+  align-content: space-between;
   padding: ${gutter*15}px ${gutter}px;
   background-color: #333;
   color: ${EazeBlue};
+  @media (max-width: ${largeScreen}px) {
+    paddin-top: ${gutter*2}px;
+    margin: 0;
+  }
   @media (max-width: ${mediumScreen}px) {
     padding: ${gutter}px;
     margin: 0;
   }
   @media (max-width: ${smallScreen}px) {
-    padding: ${gutter}px;
+    margin-top: ${gutter*18}px;
+    padding: ${gutter*2}px;
   }
 `;
 
 const PageContent = styled.div`
   display: flex;
+
+
 `;
 
 const PageHeader = styled.div`
@@ -143,7 +152,7 @@ class Home extends Component {
                                     HDurl={this.props.random[0]['images']['original']['url']}
                                     title={this.props.random[0]['title']}
                                     alt={this.props.random[0]['title']}
-                                    username={this.props.random[0]['username']}
+                                    username={this.props.random[0]['user'] ? this.props.random[0]['user']['display_name'] : this.props.random[0]['username']}
                                     rating={this.props.random[0]['rating']}
                                     uploadDate={this.props.random[0]['import_datetime']}
                                     isOpen={true}
@@ -157,15 +166,15 @@ class Home extends Component {
                     
                             {/* renders the trending/searched GIFs/Stickers */}
                             {this.props.results.map( result => (
-                                <DraggableGIF 
-                                    key={result.id}
-                                    {...result}
-                                    paused={this.props.paused}
-                                    collectionId={this.props.collectionId}
-                                    addToCollection={() => this.props.addToCollection(result.id, {...result})}
-                                    removeFromCollection={() => this.props.removeFromCollection(result.id)}
-                                    randomize={this.props.randomize}
-                                />
+                              <DraggableGIF 
+                                  key={result.id}
+                                  {...result}
+                                  paused={this.props.paused}
+                                  collectionId={this.props.collectionId}
+                                  addToCollection={() => this.props.addToCollection(result.id, {...result})}
+                                  removeFromCollection={() => this.props.removeFromCollection(result.id)}
+                                  randomize={this.props.randomize}
+                              />
                             ))}
                                 
                             {/* Area to drop GIFs */}

@@ -22,14 +22,15 @@ const AppPageContainer = styled.section`
 
 // will add transition to hide/show on scroll
 const AppHeader = styled.header`
+  position: fixed;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  align-content: center;
   border-bottom: 2px solid ${EazeGold};
   background-color: ${EazeBlue};
   max-height: 20%;
   width: 100%;
-  position: fixed;
   padding: ${gutter/2}px;
 
   @media(max-width: ${smallScreen}px){
@@ -47,11 +48,21 @@ const Button = styled.button`
   border: 2px solid ${EazeGold};
   background-color: ${EazeBlue};
   color: ${EazeGold};
+  margin: ${gutter}px;
   &:hover{
       border: 2px solid ${EazeBlue};
       background-color: ${EazeGold};
       color: ${EazeBlue};
   }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  margin: 2%;
+`
+
+const Logo = styled.div`
+  margin: 2%;
 `;
 
 // sets key to env var if there's one. if not, set the key to GIPHY's public beta key
@@ -259,6 +270,7 @@ class App extends Component {
     let results = this.state.nsfw === true ? 
                   this.state.results : 
                   this.state.results.filter( gif => gif.rating === 'g' ); 
+    console.log(this.state.random)
     // sorts results, sorted by descending upload date by default
     this.sortResults(results);
     // shows how many GIFs were not shown because they are not rated G
@@ -269,16 +281,18 @@ class App extends Component {
 
           {/* Navbar */}
           <AppHeader>
-            <Link to="/" 
-                  style={{ 
-                    textDecoration: 'none',
-                    fontFamily: 'Vibur',
-                    fontSize: '5rem',
-                    color: 'white',
-                  }}
-            >
-                eaze
-            </Link>
+            <Logo>
+              <Link to="/" 
+                    style={{ 
+                      textDecoration: 'none',
+                      fontFamily: 'Vibur',
+                      fontSize: '5rem',
+                      color: 'white',
+                    }}
+              >
+                  eaze
+              </Link>
+            </Logo>
             <SearchBar 
               query={this.state.query}
               handleChange={this.handleChange}
@@ -288,7 +302,10 @@ class App extends Component {
               toggle={this.toggle}
               paused={this.state.paused}
             />
-            <Link to='/collection'><Button>View Collection</Button></Link>
+            <ButtonContainer>
+              <Link to='/collection'><Button>View Collection</Button></Link>
+              <Button>Upload a GIF!</Button>
+            </ButtonContainer>
           </AppHeader>
 
           <Route exact path='/' render={(props) => <Home {...props}
@@ -316,19 +333,20 @@ class App extends Component {
             /> } 
           />
 
+
           <Route exact path='/collection' render={(props) => <GIFCollection {...props}
-            paused={this.state.paused}
-            random={this.state.random}
-            collection={this.state.collection}
-            collectionId={this.state.collectionId}
-            addToCollection={this.addToCollection}
-            removeFromCollection={this.removeFromCollection}
-            randomize={this.randomize}
-            toggleModal={this.toggleModal}
-          /> } />
+              paused={this.state.paused}
+              random={this.state.random}
+              collection={this.state.collection}
+              collectionId={this.state.collectionId}
+              addToCollection={this.addToCollection}
+              removeFromCollection={this.removeFromCollection}
+              randomize={this.randomize}
+              toggleModal={this.toggleModal}
+            /> } 
+          />
 
         </ModalProvider>
-
       </AppPageContainer>
     );
   }
