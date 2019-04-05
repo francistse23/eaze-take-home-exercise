@@ -29,13 +29,14 @@ const AppHeader = styled.header`
   align-content: center;
   border-bottom: 2px solid ${EazeGold};
   background-color: ${EazeBlue};
-  max-height: 40%;
+  max-height: 30%;
   width: 100%;
   padding: ${gutter/2}px;
+  transition: top 1s;
 
   @media(max-width: ${smallScreen}px){
-    flex-direction: column; 
-    transition: top 0.5s;
+    flex-direction: column;
+    padding: ${gutter*1.2}px;
   }
 `;
 
@@ -67,6 +68,13 @@ const ButtonContainer = styled.div`
 
 const Logo = styled.div`
   margin: 2%;
+  color: white;
+  font-family: Vibur;
+  font-size: 5rem;
+
+  &:hover {
+    color: ${EazeGold};
+  }
   @media(max-width: ${smallScreen}){
     margin: 0;
   }
@@ -84,7 +92,7 @@ window.onscroll = function() {
   if (prevScrollpos > currentScrollPos) {
     document.getElementById("navbar").style.top = "0";
   } else {
-    document.getElementById("navbar").style.top = "-350px";
+    document.getElementById("navbar").style.top = "-300px";
   }
   prevScrollpos = currentScrollPos;
 }
@@ -293,22 +301,21 @@ class App extends Component {
     let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
     return (
       <AppPageContainer>
+        
         <ModalProvider>
 
           {/* Navbar */}
           <AppHeader id='navbar'>
-            <Logo>
-              <Link to="/" 
-                    style={{ 
-                      textDecoration: 'none',
-                      fontFamily: 'Vibur',
-                      fontSize: '5rem',
-                      color: 'white',
-                    }}
-              >
-                  eaze
-              </Link>
-            </Logo>
+            <Link to="/" 
+                  style={{ 
+                    textDecoration: 'none',
+                
+                  }}
+                  >
+              <Logo>
+                eaze
+              </Logo> 
+            </Link>
             <SearchBar 
               query={this.state.query}
               handleChange={this.handleChange}

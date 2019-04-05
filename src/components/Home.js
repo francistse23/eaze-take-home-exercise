@@ -77,8 +77,6 @@ const Page = styled.div`
 
 const PageContent = styled.div`
   display: flex;
-
-
 `;
 
 const PageHeader = styled.div`
