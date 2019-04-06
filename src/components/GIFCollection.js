@@ -39,6 +39,7 @@ const Container = styled.div`
     }
     @media(max-width: ${mediumScreen}px){
         right: 1%;
+        top: 50%;
         max-width: ${maxAppWidth/6}px;
         max-height: 30%;
     }

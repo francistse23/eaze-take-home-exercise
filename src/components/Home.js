@@ -69,8 +69,8 @@ const Page = styled.div`
     margin: 0;
   }
   @media (max-width: ${mediumScreen}px) {
+    margin: ${gutter*10}px auto 0 auto;
     padding: ${gutter}px;
-    margin: 0;
   }
   @media (max-width: ${smallScreen}px) {
     margin: ${gutter*15}px auto 0 auto;

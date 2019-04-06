@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Modal from 'styled-react-modal';
-import { EazeBlue, EazeGold, gutter, smallScreen, mediumScreen } from '../lib/constants';
+import { EazeBlue, EazeGold, gutter, smallScreen } from '../lib/constants';
 
 const Button = styled.button`
     padding: ${gutter}px;
@@ -37,9 +37,6 @@ const Div = styled.div`
         cursor: pointer;
         transform: scale(1.1);
         box-shadow: 1px -1px 20px ${EazeGold};
-    }
-    @media(max-width: ${mediumScreen}px){
-        width: 50%;
     }
     @media(max-width: ${smallScreen}px){
         width: 100%;

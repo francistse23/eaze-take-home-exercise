@@ -15,6 +15,9 @@ const Button = styled.button`
     border-radius: 50%;
     border: none;
 
+    @media(max-width: ${mediumScreen}px){
+        width: 9%;
+    }
 `;
 
 const Switch = styled.input`
@@ -61,7 +64,7 @@ const SearchIcon = styled.img`
     background: ${EazeGold};
 
     @media(max-width: ${mediumScreen}px){
-      
+        width: 6%;
     }
     @media(max-width: ${smallScreen}px){
         width: 8%;
