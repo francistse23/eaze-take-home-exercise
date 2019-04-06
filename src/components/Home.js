@@ -28,13 +28,12 @@ const Footer = styled.footer`
   bottom: 0;
   left: 0;
   display: flex; 
-  justify-content: space-between;
+  justify-content: space-evenly;
   min-width: 100%;
-  padding: ${gutter}px;
-  margin-top: ${gutter*2}px;
-  border-top: 2px solid ${EazeGold};
+  border-top: 2px solid ${EazeBlue};
   color: ${EazeBlue};
   background: ${EazeGold};
+  padding: ${gutter/2}px;
 `;
 
 const GIFs = styled.div`
@@ -74,7 +73,7 @@ const Page = styled.div`
     margin: 0;
   }
   @media (max-width: ${smallScreen}px) {
-    margin: ${gutter*20}px auto 0 auto;
+    margin: ${gutter*15}px auto 0 auto;
     padding: ${gutter*2}px;
   }
 `;
@@ -98,6 +97,11 @@ const PageHeader = styled.div`
 const Search = styled.div`
   display: flex;
   justify-content: space-between;
+
+  @media(max-width: ${smallScreen}px){
+    flex-direction: column;
+    align-items: space-around;
+  }
 `;
 
 class Home extends Component {

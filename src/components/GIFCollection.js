@@ -71,6 +71,9 @@ const ViewCollection = styled.div`
     @media(max-width: ${mediumScreen}){
         margin: 15rem auto;
     }
+    @media(max-width: ${smallScreen}){
+        padding: 0;
+    }
  
 `;
 
@@ -177,8 +180,8 @@ class GIFCollection extends Component {
             <ViewCollection rating={this.props.rating}>
                 {connectDropTarget (
                     <div>
-                        <h2 style={{ fontFamily: 'Megrim', color: 'white' }}>Here's your awesome collection of GIFs/Stickers :)</h2>
-                        <h2 style={{ fontFamily: 'Megrim', color: 'white' }}>You can drag GIFs/Stickers out of your collection if you dont want them anymore</h2>
+                        <h3 style={{ fontFamily: 'Megrim', color: 'white' }}>Here's your awesome collection of GIFs/Stickers :)</h3>
+                        <h3 style={{ fontFamily: 'Megrim', color: 'white' }}>You can drag GIFs/Stickers out of your collection if you dont want them anymore</h3>
                         <View>
                             {collection.length > 0 ? 
                                 collection.map( gif => (  

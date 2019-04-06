@@ -18,6 +18,10 @@ const Button = styled.button`
         background-color: ${EazeBlue};
         color: ${EazeGold};
     }
+
+    @media(max-width: ${smallScreen}px){
+        font-size: 0.75rem;
+    }
 `
 
 const Div = styled.div`
@@ -43,18 +47,33 @@ const Div = styled.div`
     }
 `;
 
+const Img = styled.img`
+    
+    @media(max-width: ${smallScreen}px){
+        max-height: 80%;
+        max-width: 80%;
+    }
+`;
+
 const ModalHeader = styled.div`
     display: flex;
     justify-content: space-between; 
     padding-bottom: ${gutter}px; 
-    @media(max-width: ${smallScreen}){
-        max-width: '300px' 
+    @media(max-width: ${smallScreen}px){
+        max-width: 300px;
     }
 `;
 
+const ModalBody = styled.div`
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+`
+
 export const StyledModal = Modal.styled`
-    width: 75rem;
-    height: 75rem;
+    width: 95vw;
+    height: 95vh;
     font-size: 1.2rem;
     display: flex;
     flex-direction: column;
@@ -64,6 +83,12 @@ export const StyledModal = Modal.styled`
     background-color: ${EazeBlue};
     color: ${EazeGold};
     border: 2px solid ${EazeGold};
+
+    @media(max-width: ${smallScreen}px){
+        font-size: 0.75rem;
+        width: 100vw;
+        height: 100vh;
+    }
 `
 
 class GIF extends Component {
@@ -109,20 +134,22 @@ class GIF extends Component {
                     </ModalHeader>
                     {/* Modal Body */}
                     <div style={{ textAlign: 'center' }}>
-                        <img
+                        <Img
                             src={this.props.HDurl}
                             alt={this.props.alt}
                             title={this.props.title}
                         />
-                        <h4>    
-                            Rating: {this.props.rating !== '' && this.props.rating !== undefined ? this.props.rating.toUpperCase() : 'Not Rated'}
-                        </h4>
-                        <h4>
-                            Uploaded by: {this.props.username !== '' ? this.props.username : 'Unknown User'}
-                        </h4>
-                        <h4>
-                            Uploaded on: {this.props.uploadDate !== '' && this.props.uploadDate !== undefined ? this.props.uploadDate.slice(0,10) : 'Unknown'}
-                        </h4>
+                        <ModalBody>
+                            <h4>    
+                                Rating: {this.props.rating !== '' && this.props.rating !== undefined ? this.props.rating.toUpperCase() : 'Not Rated'}
+                            </h4>
+                            <h4>
+                                Uploaded by: {this.props.username !== '' ? this.props.username : 'Unknown User'}
+                            </h4>
+                            <h4>
+                                Uploaded on: {this.props.uploadDate !== '' && this.props.uploadDate !== undefined ? this.props.uploadDate.slice(0,10) : 'Unknown'}
+                            </h4>
+                        </ModalBody>
                     </div>
 
                     {/* Modal Footer */}

@@ -7,7 +7,7 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import debounce from 'lodash/debounce';
 
-import { maxAppWidth, mediumScreen, smallScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
+import { maxAppWidth, smallScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
 import Home from './components/Home';
 import GIFCollection from './components/GIFCollection';
 
@@ -27,7 +27,6 @@ const AppHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  align-content: center;
   border-bottom: 2px solid ${EazeGold};
   background-color: ${EazeBlue};
   max-height: 30%;
@@ -37,8 +36,7 @@ const AppHeader = styled.header`
 
   @media(max-width: ${smallScreen}px){
     flex-direction: column;
-    align-items: center;
-    border: 1px solid white;
+
   }
 `;
 
@@ -74,13 +72,8 @@ const Button = styled.button`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
-  margin: 0%;
-  max-width: 5%;
 
   @media(max-width: ${smallScreen}){
-    margin: 0 auto;
-    border: 2px solid black;
   }
 `
 
@@ -93,13 +86,6 @@ const Logo = styled.div`
 
   &:hover {
     color: ${EazeGold};
-  }
-
-  @media(max-width: ${mediumScreen}){
-  
-  }
-  @media(max-width: ${smallScreen}){
-
   }
 `;
 

@@ -14,6 +14,7 @@ const Button = styled.button`
     width: 6%;
     border-radius: 50%;
     border: none;
+
 `;
 
 const Switch = styled.input`
@@ -25,10 +26,11 @@ const Switch = styled.input`
 const Search = styled.div`
     display: flex;
     padding: ${gutter}px;
-    max-width: 60%;
+    width: 60%;
 
     @media(max-width: ${smallScreen}px){
         flex-direction: column;
+        width: 100%;
         margin-bottom: ${gutter*2}px;
         padding: 0;
     }
@@ -45,7 +47,7 @@ const SearchDiv = styled.div`
     @media(max-width: ${smallScreen}px){
         margin: 0;
         padding: 0;
-        min-width: 100%;
+        width: 100%;
     }
 `;
 
@@ -78,7 +80,7 @@ const SearchInput = styled.input`
     }
     @media(max-width: ${smallScreen}px){
         margin: 0;
-        min-width: 400px;
+        width: 80%;
     }
 `;
 
@@ -116,7 +118,7 @@ export const SearchBar = props => {
                 <SearchInput 
                     name='query'
                     value={props.query}
-                    placeholder='Seach here... (Input also acts as tags for randomizer)'
+                    placeholder='Seach here/Add Tags (separate by space)'
                     onChange={props.handleChange}
                     onKeyUp={props.search}
                 />
