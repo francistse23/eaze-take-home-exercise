@@ -31,15 +31,16 @@ const Container = styled.div`
         right: 10%;
         top: 30%;
         max-width: ${maxAppWidth/5}px;
-        max-height: ${maxAppWidth/3}px;
+        max-height: 50%;
     }
     @media(max-width: ${largeScreen}px){
         right: 2.5%;
+        max-height: 40%;
     }
     @media(max-width: ${mediumScreen}px){
         right: 1%;
         max-width: ${maxAppWidth/6}px;
-        max-height: ${maxAppWidth/4}px;
+        max-height: 30%;
     }
     @media(max-width: ${smallScreen}px){
         display: none;
@@ -51,6 +52,7 @@ const Collection = styled.div`
     flex-direction: column;
     min-width: ${maxAppWidth/8};
     color: ${EazeGold};
+    overflow-x: hidden;
 `;
 
 const ViewCollection = styled.div`
@@ -60,20 +62,22 @@ const ViewCollection = styled.div`
     align-items: center;
     align-content: center;
     text-align: center;
-    color: ${EazeBlue}
+    color: ${EazeBlue};
+    width: 100%;
     max-width: ${maxAppWidth};
-    margin: 15rem auto;
+    margin: 10rem auto;
     padding: ${gutter}px;
-    left: 50%;
+
     @media(max-width: ${mediumScreen}){
-        margin: 30rem auto;
+        margin: 15rem auto;
     }
+ 
 `;
 
 const View = styled.div`
     display: flex;
     flex-wrap: wrap;
-`
+`;
 
 const TargetDropzone = DropTarget (
     'result',

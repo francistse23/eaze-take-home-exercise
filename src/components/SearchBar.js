@@ -11,7 +11,7 @@ const Button = styled.button`
     margin-right: 1%;
     cursor: pointer;
     height: 45px;
-    width: 50px;
+    width: 6%;
     border-radius: 50%;
     border: none;
 `;
@@ -20,12 +20,13 @@ const Switch = styled.input`
     opacity: 0;
     width: 0;
     height: 0;
-    `;
+`;
     
 const Search = styled.div`
     display: flex;
     padding: ${gutter}px;
-    width: 100%;
+    max-width: 60%;
+
     @media(max-width: ${smallScreen}px){
         flex-direction: column;
         margin-bottom: ${gutter*2}px;
@@ -37,24 +38,28 @@ const SearchDiv = styled.div`
     display: flex;
     align-items: center;
     width: 80%;
+
     @media(max-width: ${mediumScreen}px){
-        width: 75%;
+     
     }
     @media(max-width: ${smallScreen}px){
-        width: 100%;
+        margin: 0;
+        padding: 0;
+        min-width: 100%;
     }
 `;
 
 const SearchIcon = styled.img`
     cursor: pointer;
-    width: 3%;
+    width: 3.5%;
     height: 30px;
     padding: ${gutter/4}px;
     border: 2px solid ${EazeGold};
     border-radius: 0 10px 10px 0;
     background: ${EazeGold};
+
     @media(max-width: ${mediumScreen}px){
-        width: 7.5%;
+      
     }
     @media(max-width: ${smallScreen}px){
         width: 8%;
@@ -66,9 +71,14 @@ const SearchInput = styled.input`
     margin: ${gutter}px 0;
     border-radius: 10px 0 0 10px;
     font-size: 1rem;
-    width: 100%;
+    width: 92%;
+
     @media(max-width: ${mediumScreen}px){
         width: 60%;
+    }
+    @media(max-width: ${smallScreen}px){
+        margin: 0;
+        min-width: 400px;
     }
 `;
 
@@ -78,7 +88,7 @@ const Toggle = styled.label`
     cursor: pointer;
     width: 50px;
     height: 34px;
-    margin: 5% 5% 0 0;
+    margin: 2.5% 2.5% 0 0;
     text-align: center;
 `;
 
@@ -86,6 +96,7 @@ const ToggleDiv = styled.div`
     display: flex;
     justify-content: space-around;
     width: 20%;
+
     @media(max-width: ${smallScreen}px){
         width: 100%;
     }

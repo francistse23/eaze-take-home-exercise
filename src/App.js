@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Route, Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -7,8 +7,7 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import debounce from 'lodash/debounce';
 
-import { maxAppWidth, smallScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
-import { SearchBar } from './components/SearchBar';
+import { maxAppWidth, mediumScreen, smallScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
 import Home from './components/Home';
 import GIFCollection from './components/GIFCollection';
 
@@ -18,27 +17,42 @@ const AppPageContainer = styled.section`
   justify-content: space-between;
   min-height: 100vh;
   max-width: ${maxAppWidth}px;
+  margin: 0 auto;
 `
 
-// will add transition to hide/show on scroll
 const AppHeader = styled.header`
   position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   align-content: center;
   border-bottom: 2px solid ${EazeGold};
   background-color: ${EazeBlue};
   max-height: 30%;
   width: 100%;
-  padding: ${gutter/2}px;
-  transition: top 1s;
+  transition: top 0.5s;
+  z-index: 1;
 
   @media(max-width: ${smallScreen}px){
     flex-direction: column;
-    padding: ${gutter*1.2}px;
+    align-items: center;
+    border: 1px solid white;
   }
 `;
+
+// To hide/show AppHeader on scroll
+var prevScrollpos = window.pageYOffset;
+window.onscroll = function() {
+  var currentScrollPos = window.pageYOffset;
+  if (prevScrollpos > currentScrollPos) {
+    document.getElementById("navbar").style.top = "0";
+  } else {
+    document.getElementById("navbar").style.top = "-400px";
+  }
+  prevScrollpos = currentScrollPos;
+}
 
 const Button = styled.button`
   cursor: pointer;
@@ -60,23 +74,32 @@ const Button = styled.button`
 
 const ButtonContainer = styled.div`
   display: flex;
-  margin: 2%;
+  justify-content: flex-end;
+  margin: 0%;
+  max-width: 5%;
+
   @media(max-width: ${smallScreen}){
-    margin: 2% 0 10% 0;
+    margin: 0 auto;
+    border: 2px solid black;
   }
 `
 
 const Logo = styled.div`
-  margin: 2%;
   color: white;
   font-family: Vibur;
-  font-size: 5rem;
+  font-size: 4rem;
+  text-decoration: none;
+  padding: ${gutter}px ${gutter*2.5}px;
 
   &:hover {
     color: ${EazeGold};
   }
+
+  @media(max-width: ${mediumScreen}){
+  
+  }
   @media(max-width: ${smallScreen}){
-    margin: 0;
+
   }
 `;
 
@@ -85,17 +108,6 @@ const key = process.env.REACT_APP_API_KEY || 'dc6zaTOxFJmzC';
 
 // Controls the offset amount in GIPHY's API
 const offset = 25;
-
-var prevScrollpos = window.pageYOffset;
-window.onscroll = function() {
-  var currentScrollPos = window.pageYOffset;
-  if (prevScrollpos > currentScrollPos) {
-    document.getElementById("navbar").style.top = "0";
-  } else {
-    document.getElementById("navbar").style.top = "-300px";
-  }
-  prevScrollpos = currentScrollPos;
-}
 
 class App extends Component {
   constructor(props){
@@ -172,7 +184,7 @@ class App extends Component {
       }
     });
   };
-  // retrieves all trending GIFs/Stickers from GIPHY
+  // retrieves trending GIFs/Stickers from GIPHY
   initialize = () => {
     axios.get(`http://api.giphy.com/v1/${this.state.type}/trending?api_key=${key}&offset=${this.state.offset}`)
         .then( res => {
@@ -300,76 +312,67 @@ class App extends Component {
     // shows how many GIFs were not shown because they are not rated G
     let omitted = this.state.results.filter( gif => gif.rating !== 'g' ).length;
     return (
-      <AppPageContainer>
-        
-        <ModalProvider>
+      <Fragment>
+        {/* Navbar */}
+        <AppHeader id='navbar'>
+          <Link to='/' style={{ textDecoration: 'none' }}>
+            <Logo> 
+              eaze
+            </Logo> 
+          </Link>
+          <ButtonContainer>
+            <Link to='/collection'><Button>View Collection</Button></Link>
+            <Button name='upload' onClick={this.toggle}>Upload a GIF!</Button>
+          </ButtonContainer>
+        </AppHeader>
 
-          {/* Navbar */}
-          <AppHeader id='navbar'>
-            <Link to="/" 
-                  style={{ 
-                    textDecoration: 'none',
-                
-                  }}
-                  >
-              <Logo>
-                eaze
-              </Logo> 
-            </Link>
-            <SearchBar 
-              query={this.state.query}
-              handleChange={this.handleChange}
-              search={this.debouncedSearch}
-              nsfw={this.state.nsfw}
-              type={this.state.type}
-              toggle={this.toggle}
-              paused={this.state.paused}
+        <AppPageContainer>
+          <ModalProvider>
+
+            <Route exact path='/' render={(props) => <Home {...props}
+                collection={this.state.collection}
+                collectionId={this.state.collectionId}
+                confirmModal={this.state.confirmModal}
+                nsfw={this.state.nsfw}
+                offset={this.offset}
+                omitted={omitted}
+                paused={this.state.paused}
+                page={this.state.page}
+                query={this.state.query}
+                random={this.state.random}
+                results={results}
+                sort={this.state.sort}
+                total={this.state.total}
+                type={this.state.type}
+                // functions
+                addToCollection={this.addToCollection}
+                clearCollection={this.clearCollection}
+                debouncedSearch={this.debouncedSearch}
+                handleChange={this.handleChange}
+                randomize={this.randomize}
+                removeFromCollection={this.removeFromCollection}
+                toggle={this.toggle}
+                toggleModal={this.toggleModal}
+              /> } 
             />
-            <ButtonContainer>
-              <Link to='/collection'><Button>View Collection</Button></Link>
-              <Button name='upload' onClick={this.toggle}>Upload a GIF!</Button>
-            </ButtonContainer>
-          </AppHeader>
 
-          <Route exact path='/' render={(props) => <Home {...props}
-              collection={this.state.collection}
-              collectionId={this.state.collectionId}
-              confirmModal={this.state.confirmModal}
-              nsfw={this.state.nsfw}
-              offset={this.offset}
-              omitted={omitted}
-              paused={this.state.paused}
-              page={this.state.page}
-              query={this.state.query}
-              random={this.state.random}
-              results={results}
-              sort={this.state.sort}
-              total={this.state.total}
-              type={this.state.type}
-              // functions
-              addToCollection={this.addToCollection}
-              clearCollection={this.clearCollection}
-              randomize={this.randomize}
-              removeFromCollection={this.removeFromCollection}
-              toggle={this.toggle}
-              toggleModal={this.toggleModal}
-            /> } 
-          />
+            <div style={{ margin: '0 auto' }}>
+              <Route exact path='/collection' render={(props) => <GIFCollection {...props}
+                  paused={this.state.paused}
+                  random={this.state.random}
+                  collection={this.state.collection}
+                  collectionId={this.state.collectionId}
+                  addToCollection={this.addToCollection}
+                  removeFromCollection={this.removeFromCollection}
+                  randomize={this.randomize}
+                  toggleModal={this.toggleModal}
+                /> } 
+              />
+            </div>
 
-          <Route exact path='/collection' render={(props) => <GIFCollection {...props}
-              paused={this.state.paused}
-              random={this.state.random}
-              collection={this.state.collection}
-              collectionId={this.state.collectionId}
-              addToCollection={this.addToCollection}
-              removeFromCollection={this.removeFromCollection}
-              randomize={this.randomize}
-              toggleModal={this.toggleModal}
-            /> } 
-          />
-
-        </ModalProvider>
-      </AppPageContainer>
+          </ModalProvider>
+        </AppPageContainer>
+      </Fragment>
     );
   }
 }
