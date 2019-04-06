@@ -43,7 +43,7 @@ const GIFs = styled.div`
   max-width: ${maxAppWidth*1.5}px;
 
   @media(max-width: ${largeScreen}px){
-    margin-left: 10%;
+    margin-left: 2.5%;
     margin-right: 20%;
   }
   @media(max-width: ${mediumScreen}px ){
