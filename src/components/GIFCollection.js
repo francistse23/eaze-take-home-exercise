@@ -10,7 +10,7 @@ import { namespace } from '../lib/constants';
 const Container = styled.div`
     display: flex;
     position: fixed;
-    right: 20%;
+    right: 5%;
     top: 25%;
     padding: ${gutter/2}px;
     max-width: ${maxAppWidth/4}px;
@@ -28,7 +28,7 @@ const Container = styled.div`
         opacity: 1;
     }
     @media(max-width: ${xLargeScreen}px){
-        right: 10%;
+    
         top: 30%;
         max-width: ${maxAppWidth/5}px;
         max-height: 50%;

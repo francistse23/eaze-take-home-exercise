@@ -15,11 +15,15 @@ const Button = styled.button`
   border: 2px solid ${EazeGold};
   background-color: ${EazeBlue};
   color: ${EazeGold};
-  margin: 0;
+  padding: ${gutter/4}px ${gutter}px;
   &:hover{
       border: 2px solid ${EazeBlue};
       background-color: ${EazeGold};
       color: ${EazeBlue};
+  }
+
+  @media(max-width: ${smallScreen}px){
+    margin: ${gutter}px;
   }
 `;
 
@@ -39,9 +43,8 @@ const Footer = styled.footer`
 const GIFs = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-left: 15%;
   max-width: ${maxAppWidth*1.5}px;
-
+  
   @media(max-width: ${largeScreen}px){
     margin-left: 2.5%;
     margin-right: 20%;
@@ -59,14 +62,13 @@ const Page = styled.div`
   display: flex;
   flex-direction: column;
   justfiy-content: space-between;
-  margin: 0 auto;
+  margin: 0;
   padding: ${gutter*10}px ${gutter}px;
   background-color: #333;
   color: ${EazeBlue};
 
   @media (max-width: ${largeScreen}px) {
     paddin-top: ${gutter*2}px;
-    margin: 0;
   }
   @media (max-width: ${mediumScreen}px) {
     margin: ${gutter*10}px auto 0 auto;
@@ -157,14 +159,14 @@ class Home extends Component {
                               <h1 style={{ padding: `${gutter*2}px` }}>
                               Are you sure you want to delete your collection? There's no turning back!
                               </h1>
-                              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                              <Button 
-                                  onClick={this.props.clearCollection}
-                                  style={{ background: 'red', color: 'white', padding: `${gutter}px` }}
-                              >
-                                  Yup!
-                              </Button>
-                              <Button name='confirmModal' onClick={this.props.toggle}>I Changed My Mind!</Button>
+                              <div style={{ width: '60%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+                                <Button 
+                                    onClick={this.props.clearCollection}
+                                    style={{ background: 'red', color: 'white', padding: `${gutter}px` }}
+                                >
+                                    Yup!
+                                </Button>
+                                <Button name='confirmModal' onClick={this.props.toggle}>I Changed My Mind!</Button>
                               </div>
                           </StyledModal> : ''
                       }

@@ -18,6 +18,9 @@ const Button = styled.button`
     @media(max-width: ${mediumScreen}px){
         width: 9%;
     }
+    @media(max-width: ${smallScreen}px){
+        width: 15%;
+    }
 `;
 
 const Switch = styled.input`

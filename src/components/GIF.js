@@ -33,14 +33,16 @@ const Div = styled.div`
     max-width: 300px;
     min-height: 90%;
     text-align: center;
+    
     &:hover{
         cursor: pointer;
         transform: scale(1.1);
         box-shadow: 1px -1px 20px ${EazeGold};
     }
+
     @media(max-width: ${smallScreen}px){
         width: 100%;
-        margin: 1% 0;
+        margin: 1% auto;
     }
 `;
 
