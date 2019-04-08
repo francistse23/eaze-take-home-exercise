@@ -6,6 +6,8 @@ import { ModalProvider } from 'styled-react-modal';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import debounce from 'lodash/debounce';
+import { eaze } from './images'
+import './App.css'
 
 import { maxAppWidth, smallScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
 import Home from './components/Home';
@@ -102,6 +104,7 @@ class App extends Component {
       collection: [],
       collectionId: [],
       confirmModal: false,
+      isLoading: true,
       isOpen: false,
       nsfw: false,
       offset: 0,
@@ -298,6 +301,7 @@ class App extends Component {
     this.initialize();
     // this will show collection
     this.collection();
+    this.setState({ isLoading: false })
   };
   render() {
     // will only return Rated G GIFs if NSFW is false
@@ -323,52 +327,55 @@ class App extends Component {
           </ButtonContainer>
         </AppHeader>
 
-        <AppPageContainer>
-          <ModalProvider>
+        {this.state.isLoading ? 
+          <img src={eaze} alt='Loading...' className='App-logo'/>  :
+          <AppPageContainer>
+            <ModalProvider>
 
-            <Route exact path='/' render={(props) => <Home {...props}
-                collection={this.state.collection}
-                collectionId={this.state.collectionId}
-                confirmModal={this.state.confirmModal}
-                nsfw={this.state.nsfw}
-                offset={this.offset}
-                omitted={omitted}
-                paused={this.state.paused}
-                page={this.state.page}
-                query={this.state.query}
-                random={this.state.random}
-                results={results}
-                sort={this.state.sort}
-                total={this.state.total}
-                type={this.state.type}
-                // functions
-                addToCollection={this.addToCollection}
-                clearCollection={this.clearCollection}
-                debouncedSearch={this.debouncedSearch}
-                handleChange={this.handleChange}
-                randomize={this.randomize}
-                removeFromCollection={this.removeFromCollection}
-                toggle={this.toggle}
-                toggleModal={this.toggleModal}
-              /> } 
-            />
-
-            <div style={{ margin: '0 auto' }}>
-              <Route exact path='/collection' render={(props) => <GIFCollection {...props}
-                  paused={this.state.paused}
-                  random={this.state.random}
+              <Route exact path='/' render={(props) => <Home {...props}
                   collection={this.state.collection}
                   collectionId={this.state.collectionId}
+                  confirmModal={this.state.confirmModal}
+                  nsfw={this.state.nsfw}
+                  offset={this.offset}
+                  omitted={omitted}
+                  paused={this.state.paused}
+                  page={this.state.page}
+                  query={this.state.query}
+                  random={this.state.random}
+                  results={results}
+                  sort={this.state.sort}
+                  total={this.state.total}
+                  type={this.state.type}
+                  // functions
                   addToCollection={this.addToCollection}
-                  removeFromCollection={this.removeFromCollection}
+                  clearCollection={this.clearCollection}
+                  debouncedSearch={this.debouncedSearch}
+                  handleChange={this.handleChange}
                   randomize={this.randomize}
+                  removeFromCollection={this.removeFromCollection}
+                  toggle={this.toggle}
                   toggleModal={this.toggleModal}
                 /> } 
               />
-            </div>
 
-          </ModalProvider>
-        </AppPageContainer>
+              <div style={{ margin: '0 auto' }}>
+                <Route exact path='/collection' render={(props) => <GIFCollection {...props}
+                    paused={this.state.paused}
+                    random={this.state.random}
+                    collection={this.state.collection}
+                    collectionId={this.state.collectionId}
+                    addToCollection={this.addToCollection}
+                    removeFromCollection={this.removeFromCollection}
+                    randomize={this.randomize}
+                    toggleModal={this.toggleModal}
+                  /> } 
+                />
+              </div>
+
+            </ModalProvider>
+          </AppPageContainer>
+        }
       </Fragment>
     );
   }
