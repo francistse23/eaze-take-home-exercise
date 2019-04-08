@@ -10,7 +10,6 @@ import debounce from 'lodash/debounce';
 import { maxAppWidth, smallScreen, gutter, EazeBlue, EazeGold, namespace } from './lib/constants';
 import Home from './components/Home';
 import GIFCollection from './components/GIFCollection';
-import { StyledModal } from './components/GIF';
 
 const AppPageContainer = styled.section`
   display: flex;
@@ -310,21 +309,6 @@ class App extends Component {
       uploadModal: false,
     })
   }
-  // ?api_key=${key}&source_image_url=${this.state.sourceImageURL}${this.state.tags !== '' ? `&tags=${this.state.tags}` : ''}${this.state.sourceURL !== '' ? `&source_post_url=${this.state.sourceURL}` : ''}
-  upload = () => {
-    if ( this.state.sourceImageURL !== '' ){
-      axios.post(`http://upload.giphy.com/v1/gifs?api_key=${key}&source_image_url=${this.state.sourceImageURL}${this.state.tags !== '' ? `&tags=${this.state.tags}` : '' }${this.state.sourceURL !== '' ? `&source_post_url=${this.state.sourceURL}` : '' }`)
-        .then( res => {
-          alert('Successful Upload!')
-          this.setState({ 
-            sourceImageURL: '',
-            sourceURL: '',
-            tags: ''
-          })
-        })
-        .catch( err => alert(err.message) )
-    }
-  }
   componentDidMount(){
     // by default, the page will load trending content on start
     this.initialize();
@@ -351,66 +335,12 @@ class App extends Component {
           </Link>
           <ButtonContainer>
             <Link to='/collection'><Button>View Collection</Button></Link>
-            <Button name='upload' onClick={this.toggle}>Upload a GIF!</Button>
+    
           </ButtonContainer>
         </AppHeader>
 
         <AppPageContainer>
           <ModalProvider>
-
-            {/* Upload Modal */}
-            <StyledModal
-              name='upload'
-              isOpen={this.state.uploadModal}
-              onBackgroundClick={this.toggleModal}
-              onEscapeKeydown={this.toggleModal}
-            >
-              <form style={{ display: 'flex', flexDirection: 'column', margin: '0 auto', textAlign: 'center' }}>
-        
-                  <h1>Upload your GIF!</h1>
-                  <label for='source_image_url'>
-                    <b>Source Image URL</b>
-                    <Input
-                      name='sourceImageURL' 
-                      value={this.state.sourceImageURL}
-                      onChange={this.handleChange}
-                      placeholder='Source of the GIF file. It must be some kind of media file (e.g. .mp4, .gif, etc.)'
-                      required
-                    />
-                  </label>
-                  <label for='source_url_preview'>
-                    {this.state.sourceImageURL !== '' ? 
-                      <Img
-                        src={this.state.sourceImageURL}
-                        alt='GIF Preview'
-                      /> :
-                      <h2>GIF Preview will render if your link is valid</h2>
-                    }
-                  </label>
-                  <label for='source_url'>
-                    <b>Source URL</b>
-                    <Input
-                      name='sourceURL' 
-                      value={this.state.sourceURL}
-                      onChange={this.handleChange}
-                      placeholder='Found this GIF somewhere? Make sure you credit the original poster by posting the link!'
-                    />
-                  </label>
-                  <label for='tags'>
-                    <b>Tags</b>
-                    <Input
-                      name='tags' 
-                      value={this.state.tags}
-                      onChange={this.handleChange}
-                      placeholder='Tags to identify your GIF. Separate each tag by a comma'
-                    />
-                  </label>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Button onClick={this.upload}>Upload!</Button>
-                    <Button name='upload' onClick={this.toggle}>Cancel</Button>
-                  </div>  
-              </form>
-            </StyledModal>
 
             <Route exact path='/' render={(props) => <Home {...props}
                 collection={this.state.collection}
