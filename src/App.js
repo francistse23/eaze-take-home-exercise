@@ -77,22 +77,6 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const Img = styled.img`
-    
-  @media(max-width: ${smallScreen}px){
-    margin: ${gutter*2}px ${gutter/2}px;
-    max-height: 80%;
-    max-width: 80%;
-  }
-`;
-
-const Input = styled.input`
-  margin: ${gutter}px;
-  padding: ${gutter}px;
-  min-width: 50%;
-  border-radius: 10px;
-`;
-
 const Logo = styled.div`
   color: white;
   font-family: Vibur;
