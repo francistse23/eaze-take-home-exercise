@@ -113,8 +113,7 @@ class Home extends Component {
 
               {/* Content */}
               <Page>
-          
-                  {/* Page's header */} 
+
                   <Search>
                     <SearchBar 
                       query={this.props.query}
@@ -141,6 +140,7 @@ class Home extends Component {
                     }
                   </Search>
 
+                  {/* Page's header */} 
                   <PageHeader>
                       <h2 style={{ fontFamily: 'Megrim' }}>
                           {`${this.props.query === "" ? "Trending" : `"${this.props.query}"` } 
